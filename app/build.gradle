@@ -34,10 +34,27 @@ android {
 
 dependencies {
 
-    implementation 'androidx.core:core-ktx:1.7.0'
+    //Kotlin dependencies
+    implementation 'androidx.core:core-ktx:1.9.0'
     implementation 'androidx.appcompat:appcompat:1.6.0'
-    implementation 'com.google.android.material:material:1.7.0'
+    implementation 'com.google.android.material:material:1.8.0'
+
+
+    //App Navigation (not to be confused with maps)
+    def navigation_version = "2.5.3"
+    implementation "androidx.navigation:navigation-fragment-ktx:$navigation_version"
+    implementation "androidx.navigation:navigation-ui-ktx:$navigation_version"
+    // Feature module Support
+    implementation "androidx.navigation:navigation-dynamic-features-fragment:$navigation_version"
+    // Testing Navigation
+    androidTestImplementation "androidx.navigation:navigation-testing:$navigation_version"
+    // Jetpack Compose Integration
+    implementation "androidx.navigation:navigation-compose:$navigation_version"
+
+
+    //Testing frameworks
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+
 }
