@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--TODO: Change bottom navigation menu button icons-->
+    <item
+        android:id="@+id/navigation_dashboard"
+        android:icon="@drawable/ic_dashboard_black_24dp"
+        android:title="@string/bottom_navbar_title_chargerDashboard" />
+
+    <item
+        android:id="@+id/navigation_home"
+        android:icon="@drawable/ic_home_black_24dp"
+        android:title="@string/bottom_navbar_title_home" />
+
+    <item
+        android:id="@+id/navigation_profile"
+        android:icon="@drawable/ic_launcher_foreground"
+        android:title="@string/bottom_navbar_title_profile" />
+
+</menu>
