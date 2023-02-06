@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_home">
+
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="com.aims.ev4me.ui.home_page.HomeFragment"
+        android:label="@string/bottom_navbar_title_home"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/navigation_dashboard"
+        android:name="com.aims.ev4me.ui.charger_dashboard.ChargerDashboardFragment"
+        android:label="@string/bottom_navbar_title_chargerDashboard"
+        tools:layout="@layout/fragment_charger_dashboard" />
+
+    <fragment
+        android:id="@+id/navigation_profile"
+        android:name="com.aims.ev4me.ui.profile_page.ProfilePageFragment"
+        android:label="@string/bottom_navbar_title_profile"
+        tools:layout="@layout/fragment_profile" />
+</navigation>

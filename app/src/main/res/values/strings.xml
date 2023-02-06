@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">EV4ME</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="bottom_navbar_title_chargerDashboard">Charger Dashboard</string>
+    <string name="bottom_navbar_title_home">Home</string>
+    <string name="bottom_navbar_title_profile">Profile</string>
 </resources>
