@@ -1,6 +1,8 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    // Add the Google services Gradle plugin
+    id 'com.google.gms.google-services'
 }
 
 android {
@@ -39,7 +41,7 @@ dependencies {
 
     //Kotlin dependencies
     implementation 'androidx.core:core-ktx:1.9.0'
-    implementation 'androidx.appcompat:appcompat:1.6.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
 
     implementation 'com.google.android.material:material:1.8.0'
 
@@ -59,6 +61,14 @@ dependencies {
     androidTestImplementation "androidx.navigation:navigation-testing:$navigation_version"
     // Jetpack Compose Integration
     implementation "androidx.navigation:navigation-compose:$navigation_version"
+
+    //Firebase dependencies
+    // Import the Firebase BoM
+    implementation platform('com.google.firebase:firebase-bom:31.2.0')
+
+    // When using the BoM, don't specify versions in Firebase dependencies
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+    implementation 'com.google.firebase:firebase-auth-ktx'
 
 
     //Testing frameworks
