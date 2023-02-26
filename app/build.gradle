@@ -3,6 +3,8 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     // Add the Google services Gradle plugin
     id 'com.google.gms.google-services'
+
+    id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
 }
 
 android {
@@ -70,8 +72,13 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.google.firebase:firebase-auth-ktx'
 
+    //Google Maps SDK
+    implementation 'com.google.android.gms:play-services-maps:18.1.0'
+    //Kotlin extension support for Google Maps SDK
+    implementation 'com.google.maps.android:maps-ktx:3.2.1'
 
     //Testing frameworks
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.10' //- slows down app runs
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
