@@ -72,6 +72,9 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.google.firebase:firebase-auth-ktx'
 
+
+    //Location API Dependencies
+    implementation 'com.google.android.gms:play-services-location:21.0.1'
     //Google Maps SDK
     implementation 'com.google.android.gms:play-services-maps:18.1.0'
     //Kotlin extension support for Google Maps SDK
