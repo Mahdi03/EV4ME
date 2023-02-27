@@ -1,4 +1,4 @@
-package com.aims.ev4me.ui.charger_dashboard
+package com.aims.ev4me.ui.main_activity.charger_dashboard
 
 import android.os.Bundle
 import android.view.LayoutInflater

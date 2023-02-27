@@ -7,6 +7,8 @@ import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import com.aims.ev4me.databinding.LoginActivityBinding
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -19,12 +21,14 @@ import com.google.firebase.ktx.Firebase
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
 
     private lateinit var binding: LoginActivityBinding
 
     private lateinit var emailInputField: EditText
     private lateinit var passwordInputField: EditText
     private lateinit var loginButton: Button
+    private lateinit var registerButton: Button
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,8 +47,10 @@ class LoginActivity : AppCompatActivity() {
         emailInputField = findViewById(R.id.email_input_field)
         passwordInputField = findViewById(R.id.password_input_field)
         loginButton = findViewById(R.id.login_button)
+        registerButton = findViewById(R.id.register_button)
 
         auth = Firebase.auth
+        firebaseAnalytics = Firebase.analytics
 
     }
 
@@ -63,9 +69,18 @@ class LoginActivity : AppCompatActivity() {
             val email: String = emailInputField.text.toString()
             val password: String = passwordInputField.text.toString()
             //TODO: sanitize strings properly
+            if (email.isEmpty()) {
+                emailInputField.error = "Email cannot be empty"
+            }
+            if (password.isEmpty()) {
+                passwordInputField.error = "Password cannot be empty"
+            }
             if (email.isNotEmpty() && password.isNotEmpty()) {
                 signIn(email, password)
             }
+        }
+        registerButton.setOnClickListener {
+            goToRegisterActivity()
         }
 
     }
@@ -75,6 +90,9 @@ class LoginActivity : AppCompatActivity() {
             if (task.isSuccessful) {
                 Log.d("LoginActivity.kt", "EYYYY IT WORKEDDDDDDDD")
                 //Link them to the MainActivity, they are now signed in
+                val bundle = Bundle()
+                bundle.putString(FirebaseAnalytics.Param.METHOD, "login")
+                firebaseAnalytics.logEvent(FirebaseAnalytics.Event.LOGIN, bundle)
                 goToMainActivity()
             }
             else {
@@ -90,5 +108,11 @@ class LoginActivity : AppCompatActivity() {
         //We need to set these flags so that they can't come back to the login activity through the back stack without logging out
         mainActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK) //Kotlin doesn't support |, use `or` instead
         startActivity(mainActivityIntent)
+    }
+
+    private fun goToRegisterActivity() {
+        val registerActivityIntent = Intent(this, RegisterActivity::class.java)
+        registerActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(registerActivityIntent)
     }
 }
