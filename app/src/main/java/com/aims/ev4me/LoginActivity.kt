@@ -25,6 +25,7 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var emailInputField: EditText
     private lateinit var passwordInputField: EditText
     private lateinit var loginButton: Button
+    private lateinit var registerButton: Button
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,6 +44,7 @@ class LoginActivity : AppCompatActivity() {
         emailInputField = findViewById(R.id.email_input_field)
         passwordInputField = findViewById(R.id.password_input_field)
         loginButton = findViewById(R.id.login_button)
+        registerButton = findViewById(R.id.register_button)
 
         auth = Firebase.auth
 
@@ -67,6 +69,9 @@ class LoginActivity : AppCompatActivity() {
                 signIn(email, password)
             }
         }
+        registerButton.setOnClickListener {
+            goToRegisterActivity()
+        }
 
     }
 
@@ -90,5 +95,11 @@ class LoginActivity : AppCompatActivity() {
         //We need to set these flags so that they can't come back to the login activity through the back stack without logging out
         mainActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK) //Kotlin doesn't support |, use `or` instead
         startActivity(mainActivityIntent)
+    }
+
+    private fun goToRegisterActivity() {
+        val registerActivityIntent = Intent(this, RegisterActivity::class.java)
+        registerActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(registerActivityIntent)
     }
 }
