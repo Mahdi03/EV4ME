@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/register_navigation">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/register_navigation"
+    app:startDestination="@+id/register_navigation_basicUserInfo">
+    <fragment
+        android:id="@+id/register_navigation_basicUserInfo"
+        android:name="com.aims.ev4me.ui.register_activity.basicUserInfo.Registration_BasicUserInfoFragment"
+        android:label=""
+        tools:layout="@layout/fragment_registration_basic_user_info" />
+
+    <!--Seller additional registration pages go here-->
+
+
+
+
+    <!--allUsers final registration pages go here-->
 
 </navigation>

@@ -4,6 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.NavController
+import androidx.navigation.fragment.findNavController
 import com.aims.ev4me.databinding.RegisterActivityBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -12,6 +14,7 @@ import com.google.firebase.ktx.Firebase
 class RegisterActivity : AppCompatActivity() {
 
     private lateinit var binding: RegisterActivityBinding
+    private var navController: NavController? = null
 
     private lateinit var auth: FirebaseAuth
 
@@ -20,6 +23,12 @@ class RegisterActivity : AppCompatActivity() {
 
         binding = RegisterActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_register_activity)
+        //val navController = findNavController(R.id.nav_host_fragment_activity_main)
+        navController = navHostFragment?.findNavController()
+
+
 
         auth = Firebase.auth
 
