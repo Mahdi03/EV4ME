@@ -7,6 +7,8 @@ import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import com.aims.ev4me.databinding.LoginActivityBinding
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -19,6 +21,7 @@ import com.google.firebase.ktx.Firebase
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
 
     private lateinit var binding: LoginActivityBinding
 
@@ -47,6 +50,7 @@ class LoginActivity : AppCompatActivity() {
         registerButton = findViewById(R.id.register_button)
 
         auth = Firebase.auth
+        firebaseAnalytics = Firebase.analytics
 
     }
 
@@ -65,6 +69,12 @@ class LoginActivity : AppCompatActivity() {
             val email: String = emailInputField.text.toString()
             val password: String = passwordInputField.text.toString()
             //TODO: sanitize strings properly
+            if (email.isEmpty()) {
+                emailInputField.error = "Email cannot be empty"
+            }
+            if (password.isEmpty()) {
+                passwordInputField.error = "Password cannot be empty"
+            }
             if (email.isNotEmpty() && password.isNotEmpty()) {
                 signIn(email, password)
             }
@@ -80,6 +90,9 @@ class LoginActivity : AppCompatActivity() {
             if (task.isSuccessful) {
                 Log.d("LoginActivity.kt", "EYYYY IT WORKEDDDDDDDD")
                 //Link them to the MainActivity, they are now signed in
+                val bundle = Bundle()
+                bundle.putString(FirebaseAnalytics.Param.METHOD, "login")
+                firebaseAnalytics.logEvent(FirebaseAnalytics.Event.LOGIN, bundle)
                 goToMainActivity()
             }
             else {
