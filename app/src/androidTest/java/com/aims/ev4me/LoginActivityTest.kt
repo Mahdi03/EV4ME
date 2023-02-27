@@ -1,7 +1,5 @@
 package com.aims.ev4me
 
-import android.support.test.espresso.intent.Intents.intended
-import android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent
 import androidx.test.core.app.launchActivity
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.junit.Test
@@ -9,6 +7,8 @@ import org.junit.runner.RunWith
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.typeText
+import androidx.test.espresso.intent.Intents.intended
+import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.filters.SmallTest
 import com.google.firebase.auth.ktx.auth

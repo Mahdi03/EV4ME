@@ -19,24 +19,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-<!--
-    <fragment xmlns:map="http://schemas.android.com/apk/res-auto"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:id="@+id/mapFragment"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/text_home"
-        map:uiScrollGestures="true"
-        map:uiZoomGestures="true"
-        map:uiRotateGestures="true"
-        map:uiTiltGestures="true"
-        map:liteMode="false"
-        map:uiCompass="true"
-        map:uiZoomControls="false"
-        />
-    -->
+
     <com.google.android.gms.maps.MapView
         android:id="@+id/mapView"
         android:layout_width="wrap_content"
