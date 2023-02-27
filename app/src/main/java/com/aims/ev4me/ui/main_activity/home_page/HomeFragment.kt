@@ -1,4 +1,4 @@
-package com.aims.ev4me.ui.home_page
+package com.aims.ev4me.ui.main_activity.home_page
 
 import android.Manifest
 import android.app.Activity
