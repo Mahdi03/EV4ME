@@ -16,6 +16,7 @@ import com.aims.ev4me.isValidEmail
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
@@ -120,9 +121,23 @@ class Registration_BasicUserInfoFragment : Fragment() {
                              * them straight to the homepage. (but then this raises a question of what
                              * if their password is wrong)
                              */
-
+                            var errorMessageToDisplay: String = it
                             //TODO: Better error messaging required
-                            nextPageButton.error = it
+                            val TAG: String = "Registration_BasicUserInfoFragment.kt"
+                            try {
+                                throw task.exception!!
+                            }
+                            catch (e: FirebaseAuthUserCollisionException) {
+                                errorMessageToDisplay = e.message!!
+                            }
+                            catch (e: Exception) {
+                                Log.e(TAG, "Safety catch-all for any other errors", e)
+                            }
+                            finally {
+                                //TODO: this error message doesn't display, add a red TextView in the UI
+                                nextPageButton.error = errorMessageToDisplay
+                            }
+
                         }
 
                     }
