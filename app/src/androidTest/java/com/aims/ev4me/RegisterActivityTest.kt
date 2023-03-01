@@ -20,11 +20,14 @@ class RegisterActivityTest {
         launchActivity<RegisterActivity>().use {
             onView(withId(R.id.input_firstName)).perform(typeText("John"))
             onView(withId(R.id.input_lastName)).perform(typeText("Doe"))
-            onView(withId(R.id.input_email)).perform(typeText("administrator@admin.com"))
+            onView(withId(R.id.input_email)).perform(typeText("administraktor@admin.com"))
             onView(withId(R.id.input_password)).perform(typeText("password"))
             onView(withId(R.id.input_confirmPassword)).perform(typeText("password"))
 
             onView(withId(R.id.nextPageButton)).perform(click())
+
+
+            onView(withId(R.id.editTextNumber2)).perform(typeText("45"))
         }
     }
 
