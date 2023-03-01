@@ -16,6 +16,7 @@ import com.aims.ev4me.isValidEmail
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
@@ -102,8 +103,41 @@ class Registration_BasicUserInfoFragment : Fragment() {
                         //TODO: do error handling in this case - server-side validation
                         task.exception?.message?.let {
                             Log.e("Registration_BasicUserInfoFragment.kt", it)
+
+                            /**
+                             * TODO:
+                             * We need to create a variable in our database called `registrationFinished`
+                             * associated with each user, that way they start the registration but then
+                             * accidentally back out, we need them to be able to continue that registration.
+                             *
+                             * This means that also at every step of the registration process we'd need
+                             * to check the database to see if those values already exist and if so, we'd
+                             * need to populate them back into the UI so that they can see that their changes
+                             * were saved.
+                             *
+                             * If their account already exists and `registrationFinished`=true, either we
+                             * can choose to redirect them to the login page saying the account already
+                             * exists, or we can try to log them in if the password is right and take
+                             * them straight to the homepage. (but then this raises a question of what
+                             * if their password is wrong)
+                             */
+                            var errorMessageToDisplay: String = it
                             //TODO: Better error messaging required
-                            nextPageButton.error = it
+                            val TAG: String = "Registration_BasicUserInfoFragment.kt"
+                            try {
+                                throw task.exception!!
+                            }
+                            catch (e: FirebaseAuthUserCollisionException) {
+                                errorMessageToDisplay = e.message!!
+                            }
+                            catch (e: Exception) {
+                                Log.e(TAG, "Safety catch-all for any other errors", e)
+                            }
+                            finally {
+                                //TODO: this error message doesn't display, add a red TextView in the UI
+                                nextPageButton.error = errorMessageToDisplay
+                            }
+
                         }
 
                     }
@@ -179,12 +213,14 @@ class Registration_BasicUserInfoFragment : Fragment() {
         //Navigate to next page in the registration process
         when (accountType) {
             "Buyer" -> {
-                //TODO: Navigate to the `allUsers` section of our app's registration flow
-                //findNavController().navigate(R.id.) //TODO: add new fragment to navigation and then link it here
+                //Navigate to the `allUsers` section of our app's registration flow
+                findNavController().navigate(R.id.action_register_navigation_basicUserInfo_to_register_navigation_allUsers_part1)
+                //Navigation.createNavigateOnClickListener(R.id.action_register_navigation_basicUserInfo_to_register_navigation_allUsers_part1, null)
             }
             "Seller" -> {
-                //TODO: Navigate to the special `seller` component of our app's registration flow
-                //findNavController().navigate(R.id.) //TODO: add new fragment to navigation and then link it here
+                //Navigate to the special `seller` component of our app's registration flow
+                findNavController().navigate(R.id.action_register_navigation_basicUserInfo_to_register_navigation_seller_part1)
+                //Navigation.createNavigateOnClickListener(R.id.action_register_navigation_basicUserInfo_to_register_navigation_seller_part1, null)
             }
         }
     }

@@ -168,14 +168,27 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                 .addOnSuccessListener { location: Location? ->
                     if (location != null) {
                         currentLocation = LatLng(location.latitude, location.longitude)
-                        googleMap!!.moveCamera(
-                            CameraUpdateFactory.newCameraPosition(
-                                CameraPosition.Builder().apply {
-                                    target(currentLocation)
-                                    zoom(GOOGLE_MAPS_ZOOM)
-                                }.build()
+                        /*
+                        We wrap this call in try-catch because by the time it loads, the user
+                        might be off the screen already on another page of the app and then
+                        when googleMap calls the update, the fragment no longer exists and
+                        throws a NullPointerException (although there could be other uses for
+                        that exception so keep an eye out in Logcat.
+                        */
+                        try {
+                            googleMap!!.moveCamera(
+                                CameraUpdateFactory.newCameraPosition(
+                                    CameraPosition.Builder().apply {
+                                        target(currentLocation)
+                                        zoom(GOOGLE_MAPS_ZOOM)
+                                    }.build()
+                                )
                             )
-                        )
+                        }
+                        catch (e: NullPointerException) {
+                            Log.e("HomeFragment.kt", "Probably tried to update the map's location when the user already selected another page", e)
+                        }
+
                     } else {
                         //Try again since it was null last time
                         updateCurrentLocation()
