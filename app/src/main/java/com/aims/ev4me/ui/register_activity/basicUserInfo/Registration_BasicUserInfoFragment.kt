@@ -18,6 +18,7 @@ import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
 class Registration_BasicUserInfoFragment : Fragment() {
@@ -204,10 +205,21 @@ class Registration_BasicUserInfoFragment : Fragment() {
         firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SIGN_UP, bundle)
 
         //TODO: Store first name, last name, and account type in database with attached UUID
-        val UID = auth.currentUser?.uid
+        val firestoreDB = Firebase.firestore
+
+        val UID = auth.currentUser?.uid!!
         val firstName = firstNameInput.text.toString()
         val lastName = lastNameInput.text.toString()
         val accountType = accountTypeDropdownInput.selectedItem.toString()
+
+        val dataToStore = hashMapOf(
+            "email" to emailInput.text.toString(),
+            "firstName" to firstName,
+            "lastName" to lastName,
+            "accountType" to accountType
+        )
+        firestoreDB.collection("users").document(UID).set(dataToStore)
+
         //Log.v("Registration_BasicUserInfoFragment.kt", accountType)
 
         //Navigate to next page in the registration process
