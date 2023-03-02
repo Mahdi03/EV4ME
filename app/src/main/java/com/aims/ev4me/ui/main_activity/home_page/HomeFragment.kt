@@ -1,4 +1,4 @@
-package com.aims.ev4me.ui.home_page
+package com.aims.ev4me.ui.main_activity.home_page
 
 import android.Manifest
 import android.app.Activity
@@ -18,7 +18,6 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import com.aims.ev4me.MainActivity
 import com.aims.ev4me.databinding.FragmentHomeBinding
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
@@ -28,7 +27,6 @@ import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
 import com.google.maps.android.ktx.cameraMoveEvents
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
@@ -141,7 +139,14 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         //googleMap!!.addMarker(MarkerOptions().position(LatLng(0.0, 0.0)).title("Marker"))
         //TODO: We need to spawn the camera at the location where the user is
         if (locationPermissionsGranted()) {
-            googleMap!!.isMyLocationEnabled = true
+            try {
+                googleMap!!.isMyLocationEnabled = true
+            }
+            catch (e: SecurityException) {
+                //They did not grant permissions, call failed
+                Log.e("HomeFragment.kt", "Location permissions were not granted", e)
+                requestLocationPermissions()
+            }
         }
         updateCurrentLocation()
         lifecycleScope.launchWhenCreated {
@@ -158,18 +163,42 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
 
 
     private fun updateCurrentLocation() {
-        fusedLocationProviderClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null).addOnSuccessListener { location: Location? ->
-            if (location != null) {
-                currentLocation = LatLng(location.latitude, location.longitude)
-                googleMap!!.moveCamera(CameraUpdateFactory.newCameraPosition(CameraPosition.Builder().apply {
-                    target(currentLocation)
-                    zoom(GOOGLE_MAPS_ZOOM)
-                }.build()))
-            }
-            else {
-                //Try again since it was null last time
-                updateCurrentLocation()
-            }
+        try {
+            fusedLocationProviderClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null)
+                .addOnSuccessListener { location: Location? ->
+                    if (location != null) {
+                        currentLocation = LatLng(location.latitude, location.longitude)
+                        /*
+                        We wrap this call in try-catch because by the time it loads, the user
+                        might be off the screen already on another page of the app and then
+                        when googleMap calls the update, the fragment no longer exists and
+                        throws a NullPointerException (although there could be other uses for
+                        that exception so keep an eye out in Logcat.
+                        */
+                        try {
+                            googleMap!!.moveCamera(
+                                CameraUpdateFactory.newCameraPosition(
+                                    CameraPosition.Builder().apply {
+                                        target(currentLocation)
+                                        zoom(GOOGLE_MAPS_ZOOM)
+                                    }.build()
+                                )
+                            )
+                        }
+                        catch (e: NullPointerException) {
+                            Log.e("HomeFragment.kt", "Probably tried to update the map's location when the user already selected another page", e)
+                        }
+
+                    } else {
+                        //Try again since it was null last time
+                        updateCurrentLocation()
+                    }
+                }
+        }
+        catch (e: SecurityException) {
+            //They did not grant permissions, call failed
+            Log.e("HomeFragment.kt", "Location permissions were not granted", e)
+            requestLocationPermissions()
         }
     }
 
@@ -210,17 +239,19 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun checkLocationSettings() {
+        //Don't mess with this even if it says deprecated and crosses out almost
+        // all of the code, it is still necessary
         val locationRequest = LocationRequest.create().apply {
             priority = Priority.PRIORITY_HIGH_ACCURACY
             isWaitForAccurateLocation =
-                true //Wait a couple of seconds until location is a little more accurate
+                false //Wait a couple of seconds until location is a little more accurate
         }
         val locationSettings = LocationSettingsRequest.Builder().apply {
             addLocationRequest(locationRequest)
         }.build()
         val checkLocationSettingsTask = activity?.let { LocationServices.getSettingsClient(it).checkLocationSettings(locationSettings) }
         checkLocationSettingsTask?.addOnSuccessListener {
-            //TODO: Now we can use their location
+            //Now we can use their location
             updateCurrentLocation()
         }
         checkLocationSettingsTask?.addOnFailureListener{ exception ->
@@ -268,7 +299,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when(requestCode) {
-            MainActivity.LOCATION_SETTINGS_REQUEST_CODE -> {
+            LOCATION_SETTINGS_REQUEST_CODE -> {
                 when (resultCode) {
                     Activity.RESULT_OK -> {
                         //TODO: Use the location now

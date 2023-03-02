@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.charger_dashboard.ChargerDashboardFragment">
+    tools:context=".ui.main_activity.charger_dashboard.ChargerDashboardFragment">
 
     <TextView
         android:id="@+id/text_dashboard"

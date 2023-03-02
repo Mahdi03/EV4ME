@@ -1,4 +1,4 @@
-package com.aims.ev4me.ui.profile_page
+package com.aims.ev4me.ui.main_activity.profile_page
 
 import android.content.Intent
 import android.os.Bundle
