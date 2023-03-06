@@ -8,10 +8,10 @@ import android.view.View
 import android.view.ViewGroup
 import com.aims.ev4me.R
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 
 class ListingFragment : Fragment() {
-
-    private var address: String = "";
 
 
     companion object {
@@ -24,7 +24,9 @@ class ListingFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        FirebaseDatabase.getInstance().getReference().child("")
+//        val database = Firebase.database
+//        database.useEmulator("10.0.2.2", 9000)
+//        database.getReference().child("Test").setValue("Hello World")
         return inflater.inflate(R   .layout.fragment_listing, container, false)
     }
 

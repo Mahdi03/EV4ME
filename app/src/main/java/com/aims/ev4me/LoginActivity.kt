@@ -13,7 +13,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+
 
 /*
 * See: https://firebase.google.com/docs/auth/android/password-auth?hl=en&authuser=0
@@ -54,6 +56,23 @@ class LoginActivity : AppCompatActivity() {
         auth = Firebase.auth
         firebaseAnalytics = Firebase.analytics
 
+        // Just testing emulator stuff on the first page that appears to make sure data
+        // was being added to the database on localhost
+        // If you want to test if the emulator is working on your end:
+        // Run firebase emulators:start in Command Line at this directory
+        // Open http://127.0.0.1:4000/database/ev4me-d47bd-default-rtdb/data
+        // Uncomment the 3 lines of code below and run the app
+        // Opening the login page should add info to database
+//        val database = Firebase.database
+//        database.useEmulator("10.0.2.2", 9000)
+//        database.getReference().child("Test2").setValue("Hello World")
+        // Testing HashMap Stuff to make sure it modified properly, it does!
+//        var hashMap: HashMap<String, Int> = HashMap<String, Int> ()
+//        hashMap.put("Akshay", 20)
+//        hashMap.put("Manasvi", 14)
+//        hashMap.put("Anikait", 147)
+//
+//        database.getReference().child("Test").child("Test Child").updateChildren(hashMap as Map<String, Int>)
     }
 
     override fun onStart() {
