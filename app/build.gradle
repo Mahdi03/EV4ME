@@ -5,6 +5,9 @@ plugins {
     id 'com.google.gms.google-services'
 
     id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
+
+    //Used to send data between pages using the navigation API
+    id 'androidx.navigation.safeargs.kotlin'
 }
 
 android {

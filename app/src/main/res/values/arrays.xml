@@ -4,4 +4,19 @@
         <item>Buyer</item>
         <item>Seller</item>
     </string-array>
+    <string-array name="charger_types">
+        <item>Level 1 (4–7 mph)</item>
+        <item>Level 2 (28–32 mph)</item>
+    </string-array>
+    <!--
+    <string-array name="car_makes">
+        <item>Tesla</item>
+        <!-: Let's find a way to populate these correctly
+        <item>Another Electric Car</item>
+    </string-array>
+    <string-array name="tesla_models">
+        <!-Deadass we need to find a way to populate these my brain ain't working
+        <item></item>
+    </string-array>
+    -->
 </resources>
