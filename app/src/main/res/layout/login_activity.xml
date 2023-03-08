@@ -11,14 +11,6 @@
     make sure to actually style this
     -->
 
-    <EditText
-        android:id="@+id/email_input_field"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textEmailAddress"
-        android:hint="administrator@admin.com"
-        android:autofillHints="emailAddress"
 
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
