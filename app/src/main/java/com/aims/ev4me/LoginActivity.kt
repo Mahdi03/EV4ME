@@ -112,11 +112,11 @@ class LoginActivity : AppCompatActivity() {
             emailInputField.error = "The email address is badly formatted"
             validationPassed = false
         }
-        if (email.isEmpty()) {
+        if (email.isBlank()) {
             emailInputField.error = "Email cannot be empty"
             validationPassed = false
         }
-        if (password.isEmpty()) {
+        if (password.isBlank()) {
             passwordInputField.error = "Password cannot be empty"
             validationPassed = false
         }

@@ -39,6 +39,25 @@
         android:id="@+id/register_navigation_allUsers_part1"
         android:name="com.aims.ev4me.ui.register_activity.allUsers.Registration_allUsersPart1Fragment"
         android:label=""
-        tools:layout="@layout/fragment_registration_allusers_part1" />
+        tools:layout="@layout/fragment_registration_allusers_part1" >
+        <action
+            android:id="@+id/action_register_navigation_allUsers_part1_to_register_navigation_allUsers_part2"
+            app:destination="@id/register_navigation_allUsers_part2"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/register_navigation_allUsers_part2"
+        android:name="com.aims.ev4me.ui.register_activity.allUsers.Registration_allUsersPart2Fragment"
+        android:label=""
+        tools:layout="@layout/fragment_registration_allusers_part2" >
+        <argument
+            android:name="numCars"
+            app:argType="integer"
+            android:defaultValue="1" />
+    </fragment>
 
 </navigation>

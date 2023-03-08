@@ -150,11 +150,11 @@ class Registration_BasicUserInfoFragment : Fragment() {
         //TODO: Better validation and input handling required, this is just temporary
         var validationPassed: Boolean = true
         //Sorryyyyy for the chain of if- statements, if you know a better way then plz implement
-        if (firstNameInput.text.toString().isEmpty()) {
+        if (firstNameInput.text.toString().isBlank()) {
             firstNameInput.error = "First name cannot be empty"
             validationPassed = false
         }
-        if (lastNameInput.text.toString().isEmpty()) {
+        if (lastNameInput.text.toString().isBlank()) {
             lastNameInput.error = "Last name cannot be empty"
             validationPassed = false
         }
@@ -162,11 +162,11 @@ class Registration_BasicUserInfoFragment : Fragment() {
             //Returns false when the passwords don't match
             validationPassed = false
         }
-        if (email.isEmpty()) {
+        if (email.isBlank()) {
             emailInput.error = "Email cannot be empty"
             validationPassed = false
         }
-        if (password.isEmpty()) {
+        if (password.isBlank()) {
             passwordInput.error = "Email cannot be empty"
             validationPassed = false
         }
