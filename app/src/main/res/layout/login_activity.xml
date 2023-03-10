@@ -66,6 +66,19 @@
         android:hint="administrator"
         android:inputType="textPassword" />
 
+    <TextView
+        android:id="@+id/login_error_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_marginHorizontal="30dp"
+
+        android:text="--Error message goes here--"
+        android:textAlignment="center"
+        android:textColor="#F00"
+        android:textSize="20sp"
+        android:visibility="gone" />
+
     <Button
         android:id="@+id/login_button"
         android:layout_width="match_parent"

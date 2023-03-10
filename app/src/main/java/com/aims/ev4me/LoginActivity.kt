@@ -1,10 +1,13 @@
 package com.aims.ev4me
 
 import android.content.Intent
+import android.opengl.Visibility
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.aims.ev4me.databinding.LoginActivityBinding
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -32,6 +35,7 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var emailInputField: EditText
     private lateinit var passwordInputField: EditText
     private lateinit var loginButton: Button
+    private lateinit var loginErrorMessageTextView: TextView
     private lateinit var registerButton: Button
 
 
@@ -51,6 +55,7 @@ class LoginActivity : AppCompatActivity() {
         emailInputField = findViewById(R.id.email_input_field)
         passwordInputField = findViewById(R.id.password_input_field)
         loginButton = findViewById(R.id.login_button)
+        loginErrorMessageTextView = findViewById(R.id.login_error_message)
         registerButton = findViewById(R.id.register_button)
 
         auth = Firebase.auth
@@ -157,7 +162,9 @@ class LoginActivity : AppCompatActivity() {
                         Log.e(TAG, "Safety catch-all for any other errors", e)
                     }
                     finally {
-                        //TODO: this error message doesn't display, add a red TextView in the UI
+                        //this error message doesn't display, add a red TextView in the UI
+                        loginErrorMessageTextView.text = errorMessageToDisplay
+                        loginErrorMessageTextView.visibility = View.VISIBLE
                         loginButton.error = errorMessageToDisplay
                     }
 
