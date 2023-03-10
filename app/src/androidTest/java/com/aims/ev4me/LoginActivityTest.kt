@@ -7,8 +7,10 @@ import org.junit.runner.RunWith
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.typeText
+import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents.intended
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.filters.SmallTest
 import com.google.firebase.auth.ktx.auth
@@ -38,19 +40,17 @@ class LoginActivityTest {
         }
     }
 
-    /*
     @Test
     fun testUnsuccessfulLogin() {
+        //Testing the error handling
         logOut()
         launchActivity<LoginActivity>().use {
             onView(withId(R.id.email_input_field)).perform(typeText("wrongemail"))
             onView(withId(R.id.password_input_field)).perform(typeText("wrongpass"))
             onView(withId(R.id.login_button)).perform(click())
-            //TODO: We need to have error handling before we test
-               the error handling
+            onView(withId((R.id.login_error_message))).check(matches(isDisplayed()))
         }
     }
-    */
 
 
     private fun logOut() {
