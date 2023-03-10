@@ -26,8 +26,6 @@ class RegisterActivityTest {
 
             onView(withId(R.id.nextPageButton)).perform(click())
 
-
-            onView(withId(R.id.editTextNumber2)).perform(typeText("45"))
         }
     }
 
