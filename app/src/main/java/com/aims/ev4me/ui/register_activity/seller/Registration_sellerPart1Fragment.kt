@@ -17,8 +17,14 @@ class Registration_sellerPart1Fragment : Fragment() {
     private val binding get() = _binding!!
 
 
-    private lateinit var addressInput: EditText
+    private lateinit var inputStreetAddress: EditText
+    private lateinit var input_apt_building: EditText
+    private lateinit var inputCity: EditText
+    private lateinit var inputState: EditText
+    private lateinit var inputCountry: EditText
+    private lateinit var inputZipCode: EditText
     private lateinit var numChargersInput: EditText
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -29,7 +35,12 @@ class Registration_sellerPart1Fragment : Fragment() {
         val root: View = binding.root
 
         val nextPageButton = binding.nextPageButton
-        addressInput = binding.inputAddress
+        inputStreetAddress = binding.inputStreetAddress
+        input_apt_building = binding.inputAptBuilding
+        inputCity = binding.inputCity
+        inputState = binding.inputState
+        inputCountry = binding.inputCountry
+        inputZipCode = binding.inputZipCode
         numChargersInput = binding.inputNumChargers
 
         nextPageButton.setOnClickListener {
@@ -49,9 +60,34 @@ class Registration_sellerPart1Fragment : Fragment() {
     private fun validateInput(): Boolean {
         var validationPassed: Boolean = true
 
-        if (addressInput.text.toString().isBlank()) {
+        if (inputStreetAddress.text.toString().isBlank()) {
             validationPassed = false
-            addressInput.error = "Address field cannot be empty"
+            inputStreetAddress.error = "Address field cannot be empty"
+        }
+
+        if (input_apt_building.text.toString().isBlank()) {
+            validationPassed = false
+            input_apt_building.error = "Address field cannot be empty"
+        }
+
+        if (inputCity.text.toString().isBlank()) {
+            validationPassed = false
+            inputCity.error = "Address field cannot be empty"
+        }
+
+        if (inputState.text.toString().isBlank()) {
+            validationPassed = false
+            inputState.error = "Address field cannot be empty"
+        }
+
+        if (inputCountry.text.toString().isBlank()) {
+            validationPassed = false
+            inputCountry.error = "Address field cannot be empty"
+        }
+
+        if (inputZipCode.text.toString().isBlank()) {
+            validationPassed = false
+            inputZipCode.error = "Address field cannot be empty"
         }
 
         if (numChargersInput.text.toString().isBlank()) {
