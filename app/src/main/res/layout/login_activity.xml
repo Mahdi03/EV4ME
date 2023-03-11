@@ -7,24 +7,25 @@
     android:orientation="vertical"
     tools:context=".LoginActivity">
 
+    <!-- EV4ME logo -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="180dp"
         android:layout_marginBottom="25dp"
         android:background="@drawable/logo" />
 
+    <!-- Cursive login -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
         android:layout_marginBottom="30dp"
-
         android:fontFamily="cursive"
         android:text="Login"
         android:textAlignment="center"
         android:textColor="#000"
         android:textSize="30sp" />
 
+    <!-- Email prompt -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -34,6 +35,7 @@
         android:text="Email:"
         android:textSize="20sp" />
 
+    <!-- Email enter -->
     <EditText
         android:id="@+id/email_input_field"
         android:layout_width="match_parent"
@@ -45,6 +47,7 @@
         android:hint="administrator@admin.com"
         android:autofillHints="emailAddress" />
 
+    <!-- Password prompt -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -54,18 +57,20 @@
         android:text="Password:"
         android:textSize="20sp" />
 
+    <!-- Password enter -->
     <EditText
         android:id="@+id/password_input_field"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
         android:layout_marginHorizontal="30dp"
-        android:layout_marginBottom="25dp"
+        android:layout_marginBottom="60dp"
 
         android:autofillHints="password"
         android:hint="administrator"
         android:inputType="textPassword" />
 
+    <!-- Login error message -->
     <TextView
         android:id="@+id/login_error_message"
         android:layout_width="match_parent"
@@ -79,33 +84,29 @@
         android:textSize="20sp"
         android:visibility="gone" />
 
+    <!-- Login button -->
     <Button
         android:id="@+id/login_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
-        android:layout_marginHorizontal="30dp"
-        android:layout_marginBottom="10dp"
-        android:background="#78A55A"
+        android:layout_marginHorizontal="125dp"
+        android:layout_marginBottom="5dp"
+
         android:text="Login"
 
-        android:textColor="@color/black" />
+        android:textColor="@color/white" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-
-        android:text="No Account? Sign up here!"
-        android:textAlignment="center" />
-
-
+    <!-- No Account? Sign up Here! button -->
     <Button
         android:id="@+id/register_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
-        android:background="#78A55A"
+        android:backgroundTint="@color/gray_100"
         android:text="No Account? Sign up here!"
+        android:textColor="@color/black"
+        android:layout_marginHorizontal="125dp"
         android:textAlignment="center" />
+
 
 </LinearLayout>
