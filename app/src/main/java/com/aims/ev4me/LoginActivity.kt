@@ -91,9 +91,11 @@ class LoginActivity : AppCompatActivity() {
         //If we made it this far, that means they need to login, we can set
         //up the onclick listeners now
         loginButton.setOnClickListener {
+            loginErrorMessageTextView.visibility = View.GONE
             attemptLogin()
         }
         registerButton.setOnClickListener {
+            loginErrorMessageTextView.visibility = View.GONE
             goToRegisterActivity()
         }
 

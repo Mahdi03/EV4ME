@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Spinner
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.aims.ev4me.R
@@ -35,6 +36,7 @@ class Registration_BasicUserInfoFragment : Fragment() {
     private lateinit var emailInput: EditText
     private lateinit var passwordInput: EditText
     private lateinit var confirmPasswordInput: EditText
+    private lateinit var registerErrorMessageTextView: TextView
     private lateinit var nextPageButton: Button
 
     private lateinit var auth: FirebaseAuth
@@ -68,9 +70,12 @@ class Registration_BasicUserInfoFragment : Fragment() {
             return@setOnKeyListener false //We need to return false for the key events to bubble through
         }
 
+        registerErrorMessageTextView = binding.registerErrorMessage
+
         nextPageButton = binding.nextPageButton
 
         nextPageButton.setOnClickListener {
+            registerErrorMessageTextView.visibility = View.GONE
             attemptRegistration()
         }
 
@@ -136,6 +141,8 @@ class Registration_BasicUserInfoFragment : Fragment() {
                             }
                             finally {
                                 //TODO: this error message doesn't display, add a red TextView in the UI
+                                registerErrorMessageTextView.text = errorMessageToDisplay
+                                registerErrorMessageTextView.visibility = View.VISIBLE
                                 nextPageButton.error = errorMessageToDisplay
                             }
 
