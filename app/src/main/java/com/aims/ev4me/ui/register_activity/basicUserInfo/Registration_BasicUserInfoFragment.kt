@@ -231,12 +231,12 @@ class Registration_BasicUserInfoFragment : Fragment() {
 
         //Navigate to next page in the registration process
         when (accountType) {
-            "Buyer" -> {
+            "User" -> {
                 //Navigate to the `allUsers` section of our app's registration flow
                 findNavController().navigate(R.id.action_register_navigation_basicUserInfo_to_register_navigation_allUsers_part1)
                 //Navigation.createNavigateOnClickListener(R.id.action_register_navigation_basicUserInfo_to_register_navigation_allUsers_part1, null)
             }
-            "Seller" -> {
+            "Lender" -> {
                 //Navigate to the special `seller` component of our app's registration flow
                 findNavController().navigate(R.id.action_register_navigation_basicUserInfo_to_register_navigation_seller_part1)
                 //Navigation.createNavigateOnClickListener(R.id.action_register_navigation_basicUserInfo_to_register_navigation_seller_part1, null)
