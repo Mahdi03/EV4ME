@@ -35,7 +35,10 @@ class MainActivity : AppCompatActivity() {
         }
         if (navController != null) {
             navView.setupWithNavController(navController)
-        }
+        }*/
+        supportActionBar?.hide()
+
+
     }
 
 }

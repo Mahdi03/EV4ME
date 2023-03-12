@@ -51,6 +51,7 @@ class LoginActivity : AppCompatActivity() {
 
         binding = LoginActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        supportActionBar?.hide()
 
         emailInputField = findViewById(R.id.email_input_field)
         passwordInputField = findViewById(R.id.password_input_field)
