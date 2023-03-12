@@ -80,6 +80,24 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/input_password" />
 
+    <TextView
+        android:id="@+id/register_error_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_marginHorizontal="30dp"
+
+        android:text="--Error message goes here--"
+        android:textAlignment="center"
+        android:textColor="#F00"
+        android:textSize="20sp"
+        android:visibility="gone"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/input_confirmPassword"
+        />
+
     <!--TODO: Replace with an arrow button that shows the next page-->
     <Button
         android:id="@+id/nextPageButton"
@@ -88,6 +106,6 @@
         android:text="Button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/input_confirmPassword" />
+        app:layout_constraintTop_toBottomOf="@+id/register_error_message" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

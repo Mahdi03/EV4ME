@@ -12,10 +12,16 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.aims.ev4me.ui.main_activity.charger_dashboard.ChargerDashboardFragment"
+        android:id="@+id/navigation_dashboard_user"
+        android:name="com.aims.ev4me.ui.main_activity.charger_dashboard.user.ChargerDashboardUserFragment"
         android:label="@string/bottom_navbar_title_chargerDashboard"
-        tools:layout="@layout/fragment_charger_dashboard" />
+        tools:layout="@layout/fragment_charger_dashboard_user" />
+
+    <fragment
+        android:id="@+id/navigation_dashboard_lender"
+        android:name="com.aims.ev4me.ui.main_activity.charger_dashboard.lender.ChargerDashboardLenderFragment"
+        android:label="@string/bottom_navbar_title_chargerDashboard"
+        tools:layout="@layout/fragment_charger_dashboard_lender" />
 
     <fragment
         android:id="@+id/navigation_profile"
