@@ -8,7 +8,17 @@ import android.widget.EditText
 import androidx.core.text.isDigitsOnly
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.aims.ev4me.convertAddressToLatLng
 import com.aims.ev4me.databinding.FragmentRegistrationSellerPart1Binding
+import com.aims.ev4me.sendHTTPRequestForward
+import com.aims.ev4me.ui.register_activity.seller.part2.ChargerStatus
+import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.runBlocking
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.firestore.ktx.firestore
+import com.google.android.gms.maps.model.LatLng
 
 class Registration_sellerPart1Fragment : Fragment() {
 
@@ -42,6 +52,27 @@ class Registration_sellerPart1Fragment : Fragment() {
         inputCountry = binding.inputCountry
         inputZipCode = binding.inputZipCode
         numChargersInput = binding.inputNumChargers
+        var fullAddress: String = ""
+        if (!binding.inputAptBuilding.text.toString().isBlank()) {
+            fullAddress =
+                inputStreetAddress.toString() + input_apt_building.toString() +
+                        ", " + inputCity.toString() + ", " + inputState.toString() +
+                        inputZipCode.toString() + inputCountry.toString()
+        }
+        else {
+            fullAddress =
+                inputStreetAddress.toString() + ", " + inputCity.toString() +
+                        ", " + inputState.toString() + inputZipCode.toString() +
+                        inputCountry.toString()
+        }
+        val input_latlng = runBlocking {convertAddressToLatLng(fullAddress) }
+
+        var chargerStatus = ChargerStatus(fullAddress,input_latlng)
+
+        val realtimeDB: DatabaseReference
+
+        realtimeDB = FirebaseDatabase.getInstance().getReference("Listings")
+
 
         nextPageButton.setOnClickListener {
             if (validateInput()) {
@@ -63,11 +94,6 @@ class Registration_sellerPart1Fragment : Fragment() {
         if (inputStreetAddress.text.toString().isBlank()) {
             validationPassed = false
             inputStreetAddress.error = "Address field cannot be empty"
-        }
-
-        if (input_apt_building.text.toString().isBlank()) {
-            validationPassed = false
-            input_apt_building.error = "Address field cannot be empty"
         }
 
         if (inputCity.text.toString().isBlank()) {
