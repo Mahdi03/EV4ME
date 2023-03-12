@@ -1,4 +1,4 @@
-package com.aims.ev4me.ui.main_activity.charger_dashboard
+package com.aims.ev4me.ui.main_activity.charger_dashboard.lender
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,11 +7,12 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.aims.ev4me.databinding.FragmentChargerDashboardBinding
+import com.aims.ev4me.databinding.FragmentChargerDashboardLenderBinding
+import com.aims.ev4me.databinding.FragmentChargerDashboardUserBinding
 
-class ChargerDashboardFragment : Fragment() {
+class ChargerDashboardLenderFragment : Fragment() {
 
-    private var _binding: FragmentChargerDashboardBinding? = null
+    private var _binding: FragmentChargerDashboardLenderBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -22,14 +23,14 @@ class ChargerDashboardFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val chargerDashboardViewModel =
-            ViewModelProvider(this).get(ChargerDashboardViewModel::class.java)
+        val chargerDashboardLenderViewModel =
+            ViewModelProvider(this).get(ChargerDashboardLenderViewModel::class.java)
 
-        _binding = FragmentChargerDashboardBinding.inflate(inflater, container, false)
+        _binding = FragmentChargerDashboardLenderBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
         val textView: TextView = binding.textDashboard
-        chargerDashboardViewModel.text.observe(viewLifecycleOwner) {
+        chargerDashboardLenderViewModel.text.observe(viewLifecycleOwner) {
             textView.text = it
         }
         return root
