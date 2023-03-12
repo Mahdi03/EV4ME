@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.Toast
 import androidx.core.text.isDigitsOnly
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -19,6 +20,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.ktx.firestore
 import com.google.android.gms.maps.model.LatLng
+import com.google.firebase.database.ktx.database
 
 class Registration_sellerPart1Fragment : Fragment() {
 
@@ -52,6 +54,7 @@ class Registration_sellerPart1Fragment : Fragment() {
         inputCountry = binding.inputCountry
         inputZipCode = binding.inputZipCode
         numChargersInput = binding.inputNumChargers
+
         var fullAddress: String = ""
         if (!binding.inputAptBuilding.text.toString().isBlank()) {
             fullAddress =
@@ -67,11 +70,24 @@ class Registration_sellerPart1Fragment : Fragment() {
         }
         val input_latlng = runBlocking {convertAddressToLatLng(fullAddress) }
 
-        var chargerStatus = ChargerStatus(fullAddress,input_latlng)
+//        val realtimeDB: DatabaseReference
+//        realtimeDB = FirebaseDatabase.getInstance().getReference("Listings")
+//        val database = Firebase.database
+//        database.useEmulator("10.0.2.2", 9000)
+//        database.getReference().child("Test").setValue("Hello World")
+//        var hashMap: HashMap<String, Int> = HashMap<String, Int> ()
+//        hashMap.put("Akshay", 20)
+//        hashMap.put("Manasvi", 14)
+//        hashMap.put("Anikait", 147)
+//
+//        database.getReference().child("Test").child("Test Child").updateChildren(hashMap as Map<String, Int>)
 
-        val realtimeDB: DatabaseReference
-
-        realtimeDB = FirebaseDatabase.getInstance().getReference("Listings")
+        //val listingID = database.push().key!!
+        //var chargerStatus = ChargerStatus(listingID)
+//        chargerStatus.addressString=fullAddress
+//        chargerStatus.addressLatLng=input_latlng
+//
+//        realtimeDB.child(listingID).setValue(listingID)
 
 
         nextPageButton.setOnClickListener {
