@@ -15,6 +15,7 @@ import com.aims.ev4me.R
 import com.aims.ev4me.databinding.FragmentRegistrationSellerPart2Binding
 import com.aims.ev4me.ui.register_activity.seller.part2.ChargerInfo
 import com.aims.ev4me.ui.register_activity.seller.part2.ChargerInfoRecyclerViewAdapter
+import com.aims.ev4me.ui.register_activity.seller.part2.ChargerStatus
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -30,6 +31,7 @@ class Registration_sellerPart2Fragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
     private var arrayList = ArrayList<ChargerInfo>()
+    private var arrayListRealtime = ArrayList<ChargerStatus>()
     private lateinit var finishRegistrationButton: Button
     private lateinit var recyclerViewAdapter: ChargerInfoRecyclerViewAdapter
 
@@ -52,6 +54,7 @@ class Registration_sellerPart2Fragment : Fragment() {
         //Populate an empty arrayList of a certain number of elements that will then be affected by the recyclerview's adapter
         for (i in 1..numChargers) {
             arrayList.add(ChargerInfo(chargerName="", chargerType=ChargerInfo.ChargerType.NO_LEVEL))
+            //arrayListRealtime.add(ChargerStatus(addressString = ))
         }
 
         recyclerViewAdapter = context?.let { ChargerInfoRecyclerViewAdapter(it, arrayList) }!!
@@ -85,6 +88,9 @@ class Registration_sellerPart2Fragment : Fragment() {
             val UID = auth.currentUser?.uid!!
             //For this current user, create a new field called "vehicles" and store all their vehicle data there
             firestoreDB.collection("users").document(UID).update("chargers", myData)
+
+            //Add charger to realtime database (acting like a server)
+
             //NOW we can finally move on to the rest of the regular registration
             findNavController().navigate(R.id.action_register_navigation_seller_part2_to_register_navigation_allUsers_part1)
         }

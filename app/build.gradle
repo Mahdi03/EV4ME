@@ -8,6 +8,8 @@ plugins {
 
     //Used to send data between pages using the navigation API
     id 'androidx.navigation.safeargs.kotlin'
+
+    id 'org.jetbrains.kotlin.plugin.serialization' version '1.5.21'
 }
 
 android {
@@ -54,6 +56,12 @@ dependencies {
 
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.5.1'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
+    // currently using ktor version 1.6.4 cause ik it works, possible that
+    // the latest version also works but ill check later
+    implementation "io.ktor:ktor-client-android:1.6.4"
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.0"
+
+
 
 
     //App Navigation (not to be confused with maps)
