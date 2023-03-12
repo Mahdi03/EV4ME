@@ -1,6 +1,7 @@
 package com.aims.ev4me.ui.register_activity.seller
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -55,21 +56,22 @@ class Registration_sellerPart1Fragment : Fragment() {
         inputZipCode = binding.inputZipCode
         numChargersInput = binding.inputNumChargers
 
-        var fullAddress: String = ""
-        if (!binding.inputAptBuilding.text.toString().isBlank()) {
-            fullAddress =
-                inputStreetAddress.toString() + input_apt_building.toString() +
-                        ", " + inputCity.toString() + ", " + inputState.toString() +
-                        inputZipCode.toString() + inputCountry.toString()
-        }
-        else {
-            fullAddress =
-                inputStreetAddress.toString() + ", " + inputCity.toString() +
-                        ", " + inputState.toString() + inputZipCode.toString() +
-                        inputCountry.toString()
-        }
-        val input_latlng = runBlocking {convertAddressToLatLng(fullAddress) }
-
+        //moved to nextpagebutton
+//        var fullAddress: String = ""
+//        if (!binding.inputAptBuilding.text.toString().isBlank()) {
+//            fullAddress =
+//                inputStreetAddress.toString() + input_apt_building.toString() +
+//                        ", " + inputCity.toString() + ", " + inputState.toString() +
+//                        inputZipCode.toString() + inputCountry.toString()
+//        }
+//        else {
+//            fullAddress =
+//                inputStreetAddress.toString() + ", " + inputCity.toString() +
+//                        ", " + inputState.toString() + inputZipCode.toString() +
+//                        inputCountry.toString()
+//        }
+//        val input_latlng = runBlocking {convertAddressToLatLng(fullAddress) }
+        //maybe should move to nextpagebutton
 //        val realtimeDB: DatabaseReference
 //        realtimeDB = FirebaseDatabase.getInstance().getReference("Listings")
 //        val database = Firebase.database
@@ -98,6 +100,22 @@ class Registration_sellerPart1Fragment : Fragment() {
                 val action = Registration_sellerPart1FragmentDirections
                     .actionRegisterNavigationSellerPart1ToRegisterNavigationSellerPart2(numChargers)
                 findNavController().navigate(action)
+                var fullAddress: String = ""
+                if (!binding.inputAptBuilding.text.toString().isBlank()) {
+                    fullAddress =
+                        inputStreetAddress.toString() + input_apt_building.toString() +
+                                ", " + inputCity.toString() + ", " + inputState.toString() +
+                                inputZipCode.toString() + inputCountry.toString()
+                }
+                else {
+                    fullAddress =
+                        inputStreetAddress.toString() + ", " + inputCity.toString() +
+                                ", " + inputState.toString() + inputZipCode.toString() +
+                                inputCountry.toString()
+                }
+                Log.v("Registration_sellerPart1Fragment.kt",fullAddress)
+
+                //val input_latlng = runBlocking {convertAddressToLatLng(fullAddress) }
             }
         }
 
