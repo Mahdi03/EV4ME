@@ -96,28 +96,38 @@ class Registration_sellerPart1Fragment : Fragment() {
 
         nextPageButton.setOnClickListener {
             if (validateInput()) {
+                val aptBuilding: String = binding.inputAptBuilding.text.toString()
+                val streetAddress: String = inputStreetAddress.text.toString()
+                val city: String = inputCity.text.toString()
+                val state: String = inputState.text.toString()
+                val zipCode: String = inputZipCode.text.toString()
+                val country: String = inputCountry.text.toString()
+
+                val fullAddress =
+                    if (aptBuilding.isNotBlank()) "$streetAddress $aptBuilding, $city, $state $zipCode, $country"
+                    else "$streetAddress, $city, $state $zipCode $country"
+
+                Log.v("Registration_sellerPart1Fragment.kt", fullAddress)
+
+                val latLngResult = runBlocking {
+                    convertAddressToLatLng(fullAddress)
+                }
+
+                val firestoreDB = Firebase.firestore
+                val auth = Firebase.auth
+                val UID = auth.currentUser?.uid!!
+                val doc = firestoreDB.collection("users").document(UID)
+                doc.update("address", fullAddress)
+                doc.update("latLng", latLngResult)
+
+
 
                 val numChargers: Int = numChargersInput.text.toString().toInt()
 
                 val action = Registration_sellerPart1FragmentDirections
                     .actionRegisterNavigationSellerPart1ToRegisterNavigationSellerPart2(numChargers)
                 findNavController().navigate(action)
-                var fullAddress: String = ""
-                if (!binding.inputAptBuilding.text.toString().isBlank()) {
-                    fullAddress =
-                        inputStreetAddress.toString() + input_apt_building.toString() +
-                                ", " + inputCity.toString() + ", " + inputState.toString() +
-                                inputZipCode.toString() + inputCountry.toString()
-                }
-                else {
-                    fullAddress =
-                        inputStreetAddress.toString() + ", " + inputCity.toString() +
-                                ", " + inputState.toString() + inputZipCode.toString() +
-                                inputCountry.toString()
-                }
-                Log.v("Registration_sellerPart1Fragment.kt",fullAddress)
 
-                //val input_latlng = runBlocking {convertAddressToLatLng(fullAddress) }
             }
         }
 
@@ -134,22 +144,22 @@ class Registration_sellerPart1Fragment : Fragment() {
 
         if (inputCity.text.toString().isBlank()) {
             validationPassed = false
-            inputCity.error = "Address field cannot be empty"
+            inputCity.error = "City cannot be empty"
         }
 
         if (inputState.text.toString().isBlank()) {
             validationPassed = false
-            inputState.error = "Address field cannot be empty"
+            inputState.error = "State cannot be empty"
         }
 
         if (inputCountry.text.toString().isBlank()) {
             validationPassed = false
-            inputCountry.error = "Address field cannot be empty"
+            inputCountry.error = "Country cannot be empty"
         }
 
         if (inputZipCode.text.toString().isBlank()) {
             validationPassed = false
-            inputZipCode.error = "Address field cannot be empty"
+            inputZipCode.error = "Zip Code field cannot be empty"
         }
 
         if (numChargersInput.text.toString().isBlank()) {

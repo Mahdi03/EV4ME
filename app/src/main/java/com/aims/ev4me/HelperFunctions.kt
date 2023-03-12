@@ -2,11 +2,9 @@ package com.aims.ev4me
 
 import android.util.Patterns
 import com.google.android.gms.maps.model.LatLng
-//import com.android.volley.toolbox.Volley
 import io.ktor.client.*
 import io.ktor.client.request.*
 import io.ktor.http.*
-import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
@@ -16,8 +14,9 @@ fun CharSequence?.isValidEmail() = !isNullOrEmpty() && Patterns.EMAIL_ADDRESS.ma
 
 suspend fun convertAddressToLatLng(address: String): LatLng {
     val apiKey = BuildConfig.POSITION_STACK_API_KEY
-    val response = runBlocking { sendHTTPRequestForward("http://api.positionstack.com/v1/forward?access_key=$apiKey", address) }
+    val response = sendHTTPRequestForward("http://api.positionstack.com/v1/forward?access_key=$apiKey", address)
 
+    //val response = sendHTTPRequestForward(" https://nominatim.openstreetmap.org/search?", address)
     //Object that holds every value that the JSON string holds
     //All are initialized as JSONElements because sometimes the API has null values
     //Use .toType() to get it to the desired Type
@@ -45,8 +44,7 @@ suspend fun sendHTTPRequestForward(url: String, address: String): String {
     val client = HttpClient()
     val searchQuery = address.encodeURLQueryComponent()
 
-
-    val urlFull = url+"&query="+searchQuery
+    val urlFull = "$url&query=$searchQuery"
     val response = client.request<String>(urlFull) {
         method= HttpMethod.Get
     }

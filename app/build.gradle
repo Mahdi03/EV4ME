@@ -54,8 +54,8 @@ dependencies {
 
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
-    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.5.1'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.6.0'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.0'
     // currently using ktor version 1.6.4 cause ik it works, possible that
     // the latest version also works but ill check later
     implementation "io.ktor:ktor-client-android:1.6.4"
@@ -76,6 +76,8 @@ dependencies {
     implementation "androidx.navigation:navigation-compose:$navigation_version"
 
 
+
+
     //Firebase dependencies
     // Import the Firebase BoM
     implementation platform('com.google.firebase:firebase-bom:31.2.0')
@@ -89,12 +91,17 @@ dependencies {
     implementation 'com.google.firebase:firebase-database-ktx' //Realtime database
 
 
+
+
     //Location API Dependencies
     implementation 'com.google.android.gms:play-services-location:21.0.1'
     //Google Maps SDK
     implementation 'com.google.android.gms:play-services-maps:18.1.0'
     //Kotlin extension support for Google Maps SDK
     implementation 'com.google.maps.android:maps-ktx:3.2.1'
+
+
+
 
     //Testing frameworks
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.10' //- slows down app runs
@@ -103,6 +110,7 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
     androidTestImplementation 'androidx.test.espresso:espresso-intents:3.5.1'
+    //androidTestImplementation 'com.azimolabs.conditionwatcher:conditionwatcher:0.2'
 
 }
 
