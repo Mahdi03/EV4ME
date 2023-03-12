@@ -7,22 +7,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.EditText
-import android.widget.Toast
 import androidx.core.text.isDigitsOnly
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.aims.ev4me.convertAddressToLatLng
 import com.aims.ev4me.databinding.FragmentRegistrationSellerPart1Binding
-import com.aims.ev4me.sendHTTPRequestForward
-import com.aims.ev4me.ui.register_activity.seller.part2.ChargerStatus
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.runBlocking
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.ktx.firestore
-import com.google.android.gms.maps.model.LatLng
-import com.google.firebase.database.ktx.database
 
 class Registration_sellerPart1Fragment : Fragment() {
 
