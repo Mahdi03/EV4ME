@@ -40,7 +40,7 @@ class RegisterActivityTest {
     }
 
     @Test
-    fun testSellersPart1() {
+    fun testLenderRegistration() {
         logOut()
         /*
         val firestore = Firebase.firestore
@@ -64,6 +64,7 @@ class RegisterActivityTest {
                 )
             }
 
+            //We start in basic_user_info
             onView(withId(R.id.input_firstName)).perform(typeText("John"))
             onView(withId(R.id.input_lastName)).perform(typeText("Doe"))
 
@@ -82,7 +83,8 @@ class RegisterActivityTest {
             onView(withId(R.id.nextPageButton)).perform(click())
 
             //We need to implement a specific class to wait for the transitions between pages
-            class FragmentTransitionInstructionToSellersPart1(override val description: String) :
+            class FragmentTransitionInstructionToSellersPart1(override val description: String,
+                                                              override val id: Int) :
                 Instruction() {
                 override fun checkCondition(): Boolean {
                     //Check that either the registration passed or we failed with an error, both should trigger the countdown
@@ -110,7 +112,7 @@ class RegisterActivityTest {
                 }
 
             }
-            ConditionWatcher.waitForCondition(FragmentTransitionInstructionToSellersPart1("Waiting for first step of registration"))
+            ConditionWatcher.waitForCondition(FragmentTransitionInstructionToSellersPart1("Waiting for first step of registration", -1))
 
             fun hello() {
                 try {
@@ -124,7 +126,7 @@ class RegisterActivityTest {
                 catch (e: Throwable) {
                     onView(withId(R.id.input_email)).perform(replaceText(generateRandomEmail(5, "test.co")))
                     onView(withId(R.id.nextPageButton)).perform(click())
-                    ConditionWatcher.waitForCondition(FragmentTransitionInstructionToSellersPart1("Waiting for first step of registration"))
+                    ConditionWatcher.waitForCondition(FragmentTransitionInstructionToSellersPart1("Waiting for first step of registration", -1))
                     hello()
                     //Do nothinggggg
                 }
@@ -132,6 +134,7 @@ class RegisterActivityTest {
 
             hello()
 
+            //Now we've moved on to seller_part1
             onView(withId(R.id.inputStreetAddress)).perform(typeText("525 Ucen Rd"))
             onView(withId(R.id.inputCity)).perform(typeText("Isla Vista"))
             onView(withId(R.id.inputState)).perform(typeText("CA"))
@@ -151,26 +154,49 @@ class RegisterActivityTest {
                 .perform(click())
 
 
-            class FragmentTransitionInstructionToSellersPart2(override val description: String) :
-                Instruction() {
-                override fun checkCondition(): Boolean {
-                    //Nah cuz what is Kotlin
-                    val viewFound = try {
-                        onView(withId(R.id.recyclerViewForChargerInfoForms)).perform(click())
-                        true
-                    } catch (e: NoMatchingViewException) {
-                        false
-                    } catch (e: Exception) {
-                        false
-                    }
-                    return viewFound
-                }
 
-            }
-            ConditionWatcher.waitForCondition(FragmentTransitionInstructionToSellersPart2("Waiting for second step of registration"))
+            ConditionWatcher.waitForCondition(existsViewWithID("Waiting for second step of registration", R.id.recyclerViewForChargerInfoForms))
+            //Now we're at seller_part2
+            onView(withId(R.id.input_chargerName)).perform(typeText("My Charger"))
+            //Select the second element in the list of chargers
+            onView(withId(R.id.input_chargerTypeDropdown)).perform(click())
+            onData(anything()).atPosition(1).perform(click())
+            onView(withId(R.id.finishRegistrationButton)).perform(click())
 
+            ConditionWatcher.waitForCondition(existsViewWithID("Waiting for third step of registration", R.id.numberOfCarsInput))
+            //Now we're at allusers_part1
+            onView(withId(R.id.numberOfCarsInput)).perform(typeText("1"))
+            onView(withId(R.id.nextPageButton)).perform(click())
 
+            ConditionWatcher.waitForCondition(existsViewWithID("Waiting for fourth step of registration", R.id.recyclerViewForVehicleInfoForms))
+            //Now we're at allusers_part2
+            onView(withId(R.id.input_carMake)).perform(typeText("Tesla"))
+            onView(withId(R.id.input_carModel)).perform(typeText("Model X"))
+            onView(withId(R.id.input_carColor)).perform(typeText("white"))
+            onView(withId(R.id.input_licensePlateNumber)).perform(typeText("EV4ME"))
+
+            onView(withId(R.id.finishRegistrationButton)).perform(click())
+
+            ConditionWatcher.waitForCondition(existsViewWithID("Waiting for end of registration", R.id.nav_view))
+            //And voila!!! we are at MainActivity
         }
+    }
+
+    class existsViewWithID(override val description: String, override val id: Int) :
+        Instruction() {
+        override fun checkCondition(): Boolean {
+            //Nah cuz what is Kotlin
+            val viewFound = try {
+                onView(withId(id)).perform(click())
+                true
+            } catch (e: NoMatchingViewException) {
+                false
+            } catch (e: Exception) {
+                false
+            }
+            return viewFound
+        }
+
     }
 /*
     @Test
@@ -265,6 +291,7 @@ class ConditionWatcher private constructor() {
  * Created by F1sherKK on 16/12/15.
  */
 abstract class Instruction {
+    abstract val id: Int
     var dataContainer = Bundle()
         private set
 
