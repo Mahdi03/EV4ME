@@ -1,29 +1,43 @@
 package com.aims.ev4me
 
 import android.os.Bundle
+import android.view.View
 import androidx.navigation.Navigation
 import androidx.navigation.testing.TestNavHostController
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.core.app.launchActivity
 import androidx.test.espresso.Espresso.onData
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.IdlingResource
-import androidx.test.espresso.IdlingResource.ResourceCallback
+import androidx.test.espresso.FailureHandler
 import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.action.ViewActions.*
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.firestore.ktx.firestoreSettings
 import com.google.firebase.ktx.Firebase
 import io.ktor.util.reflect.*
+import org.apache.commons.lang3.RandomStringUtils
 import org.hamcrest.CoreMatchers.*
+import org.hamcrest.Matcher
 import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class RegisterActivityTest {
+
+    @Suppress("SpellCheckingInspection")
+    fun generateRandomEmail(localEmailLength: Int, host: String = "gmail.com"): String {
+        val ALLOWED_CHARS = "abcdefghijklmnopqrstuvwxyz" + "1234567890" + "_-."
+        val firstLetter = RandomStringUtils.random(1, 'a'.code, 'z'.code, false, false)
+        val temp = if (localEmailLength == 1) "" else RandomStringUtils.random(
+            localEmailLength - 1,
+            ALLOWED_CHARS
+        )
+        return "$firstLetter$temp@$host"
+    }
 
     @Test
     fun testSellersPart1() {
@@ -60,16 +74,18 @@ class RegisterActivityTest {
             //onView(withId(R.id.input_accountTypeDropdown)).check(matches(withSpinnerText(containsString("lender"))))
 
             onView(withId(R.id.input_email))
-                .perform(typeText("t04@t.co"))
+                .perform(typeText(generateRandomEmail(5, "test.co")))
+                //.perform(typeText("a@a.com"))
             onView(withId(R.id.input_password)).perform(typeText("password"))
             onView(withId(R.id.input_confirmPassword)).perform(typeText("password"))
 
             onView(withId(R.id.nextPageButton)).perform(click())
-//We need to implement a specific class to wait for the transitions between pages
 
+            //We need to implement a specific class to wait for the transitions between pages
             class FragmentTransitionInstructionToSellersPart1(override val description: String) :
                 Instruction() {
                 override fun checkCondition(): Boolean {
+                    //Check that either the registration passed or we failed with an error, both should trigger the countdown
                     //Nah cuz what is Kotlin
                     val viewFound = try {
                         onView(withId(R.id.inputStreetAddress)).perform(click())
@@ -79,11 +95,42 @@ class RegisterActivityTest {
                     } catch (e: Exception) {
                         false
                     }
-                    return viewFound
+                    val errorMessageShown = try {
+                        onView(withId(R.id.register_error_message)).check(
+                            matches(
+                                withEffectiveVisibility(ViewMatchers.Visibility.GONE)
+                            )
+                        )
+                        false
+                    } catch (e: Throwable) {
+                        true
+                    }
+
+                    return (viewFound or errorMessageShown)
                 }
 
             }
             ConditionWatcher.waitForCondition(FragmentTransitionInstructionToSellersPart1("Waiting for first step of registration"))
+
+            fun hello() {
+                try {
+                    onView(withId(R.id.register_error_message))
+                        .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)))
+                }
+                catch (e: NoMatchingViewException) {
+                    //That means this view was not found, we've already moved on to the next page
+                    //Do nothing
+                }
+                catch (e: Throwable) {
+                    onView(withId(R.id.input_email)).perform(replaceText(generateRandomEmail(5, "test.co")))
+                    onView(withId(R.id.nextPageButton)).perform(click())
+                    ConditionWatcher.waitForCondition(FragmentTransitionInstructionToSellersPart1("Waiting for first step of registration"))
+                    hello()
+                    //Do nothinggggg
+                }
+            }
+
+            hello()
 
             onView(withId(R.id.inputStreetAddress)).perform(typeText("525 Ucen Rd"))
             onView(withId(R.id.inputCity)).perform(typeText("Isla Vista"))
@@ -229,3 +276,6 @@ abstract class Instruction {
 
     abstract fun checkCondition(): Boolean
 }
+
+
+
