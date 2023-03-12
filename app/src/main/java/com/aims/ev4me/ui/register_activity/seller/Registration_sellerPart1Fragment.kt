@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.EditText
 import android.widget.Toast
 import androidx.core.text.isDigitsOnly
@@ -44,6 +45,7 @@ class Registration_sellerPart1Fragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        activity?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         _binding = FragmentRegistrationSellerPart1Binding.inflate(inflater, container, false)
         val root: View = binding.root
 

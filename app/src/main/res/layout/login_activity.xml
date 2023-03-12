@@ -25,88 +25,99 @@
         android:textColor="#000"
         android:textSize="30sp" />
 
-    <!-- Email prompt -->
-    <TextView
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="wrap_content">
 
-        android:layout_marginHorizontal="30dp"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-        android:text="Email:"
-        android:textSize="20sp" />
+            <!-- Email prompt -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
 
-    <!-- Email enter -->
-    <EditText
-        android:id="@+id/email_input_field"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+                android:layout_marginHorizontal="30dp"
 
-        android:layout_marginHorizontal="30dp"
-        android:layout_marginBottom="25dp"
+                android:text="Email:"
+                android:textSize="20sp" />
 
-        android:hint="administrator@admin.com"
-        android:autofillHints="emailAddress" />
+            <!-- Email enter -->
+            <EditText
+                android:id="@+id/email_input_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
 
-    <!-- Password prompt -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+                android:layout_marginHorizontal="30dp"
+                android:layout_marginBottom="25dp"
 
-        android:layout_marginHorizontal="30dp"
+                android:autofillHints="emailAddress"
+                android:hint="administrator@admin.com" />
 
-        android:text="Password:"
-        android:textSize="20sp" />
+            <!-- Password prompt -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
 
-    <!-- Password enter -->
-    <EditText
-        android:id="@+id/password_input_field"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+                android:layout_marginHorizontal="30dp"
 
-        android:layout_marginHorizontal="30dp"
-        android:layout_marginBottom="60dp"
+                android:text="Password:"
+                android:textSize="20sp" />
 
-        android:autofillHints="password"
-        android:hint="administrator"
-        android:inputType="textPassword" />
+            <!-- Password enter -->
+            <EditText
+                android:id="@+id/password_input_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
 
-    <!-- Login error message -->
-    <TextView
-        android:id="@+id/login_error_message"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+                android:layout_marginHorizontal="30dp"
+                android:layout_marginBottom="60dp"
 
-        android:layout_marginHorizontal="30dp"
+                android:autofillHints="password"
+                android:hint="administrator"
+                android:inputType="textPassword" />
 
-        android:text="--Error message goes here--"
-        android:textAlignment="center"
-        android:textColor="#F00"
-        android:textSize="20sp"
-        android:visibility="gone" />
+            <!-- Login error message -->
+            <TextView
+                android:id="@+id/login_error_message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
 
-    <!-- Login button -->
-    <Button
-        android:id="@+id/login_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+                android:layout_marginHorizontal="30dp"
 
-        android:layout_marginHorizontal="125dp"
-        android:layout_marginBottom="5dp"
+                android:text="--Error message goes here--"
+                android:textAlignment="center"
+                android:textColor="#F00"
+                android:textSize="20sp"
+                android:visibility="gone" />
 
-        android:text="Login"
+            <!-- Login button -->
+            <Button
+                android:id="@+id/login_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
 
-        android:textColor="@color/white" />
+                android:layout_marginHorizontal="125dp"
+                android:layout_marginBottom="5dp"
 
-    <!-- No Account? Sign up Here! button -->
-    <Button
-        android:id="@+id/register_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/gray_100"
-        android:text="No Account? Sign up here!"
-        android:textColor="@color/black"
-        android:layout_marginHorizontal="125dp"
-        android:textAlignment="center" />
+                android:text="Login"
 
+                android:textColor="@color/white" />
+
+            <!-- No Account? Sign up Here! button -->
+            <Button
+                android:id="@+id/register_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="125dp"
+                android:backgroundTint="@color/gray_100"
+                android:text="No Account? Sign up here!"
+                android:textAlignment="center"
+                android:textColor="@color/black" />
+        </LinearLayout>
+
+    </ScrollView>
 
 </LinearLayout>
