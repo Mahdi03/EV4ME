@@ -16,7 +16,12 @@ import com.aims.ev4me.databinding.FragmentRegistrationSellerPart2Binding
 import com.aims.ev4me.ui.register_activity.seller.part2.ChargerInfo
 import com.aims.ev4me.ui.register_activity.seller.part2.ChargerInfoRecyclerViewAdapter
 import com.aims.ev4me.ui.register_activity.seller.part2.ChargerStatus
+import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ktx.database
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
@@ -75,21 +80,54 @@ class Registration_sellerPart2Fragment : Fragment() {
             }
             if (!validationPassed) { return@setOnClickListener; }
 
-            //TODO: Save all this data to the database under their UUID
-
-            //TODO: Yo someone please fix this data structure I just kinda got it in here for now
-            val myData = ArrayList<HashMap<String, String>>()
-            for (vehicleInfo in myFinalArrayList) {
-                Log.v("Registration_sellerPart2Fragment.kt", vehicleInfo.toString())
-                myData.add(vehicleInfo.toHashMap())
-            }
             val firestoreDB = Firebase.firestore
             val auth = Firebase.auth
             val UID = auth.currentUser?.uid!!
-            //For this current user, create a new field called "vehicles" and store all their vehicle data there
-            firestoreDB.collection("users").document(UID).update("chargers", myData)
 
+            //TODO: Save all this data to the database under their UUID
             //Add charger to realtime database (acting like a server)
+            val id: String = "1"
+            var charger_base: ChargerStatus = ChargerStatus(id)
+
+//            val databaseEmulator = Firebase.database
+//            databaseEmulator.useEmulator("10.0.2.2", 9000)
+            var databaseReal: DatabaseReference
+            databaseReal = Firebase.database.reference
+            var latlng1: Any?
+
+            firestoreDB.collection("users").document(UID).get()
+                .addOnSuccessListener {
+                    latlng1 = it["latLng"]
+                    var lat1 = ((latlng1 as HashMap<String, Any>)["latitude"]).toString().toDouble()
+                    var lng1 = ((latlng1 as HashMap<String, Any>)["longitude"]).toString().toDouble()
+                    val latLngRT: LatLng = LatLng(lat1, lng1)
+                    charger_base.addressLatLng = latLngRT
+                    charger_base.addressString = it["address"].toString()
+                    Log.i("firebase 1", charger_base.addressLatLng.toString())
+                    val myData = ArrayList<HashMap<String, String>>()
+                    var i: Int = 0
+                    for (chargerInfo in myFinalArrayList) {
+                        Log.v("Registration_sellerPart2Fragment.kt", chargerInfo.toString())
+                        // for firestore:
+                        myData.add(chargerInfo.toHashMap())
+                        // rest is for realtime:
+                        var charger = ChargerStatus(listingID = UID+i.toString())
+                        charger.chargerType=chargerInfo.chargerType
+                        charger.chargerName=chargerInfo.chargerName
+                        charger.addressLatLng=charger_base.addressLatLng
+                        charger.addressString=charger_base.addressString
+                        //databaseEmulator.getReference().child("Listings").child(UID+i.toString()).setValue(charger)
+                        databaseReal.child("Listings").child(UID+i.toString()).setValue(charger)
+                        Log.i("firebase", charger_base.addressLatLng.toString())
+                        Log.i("firebase 2", charger.chargerName)
+                        i++
+                    }
+
+                    firestoreDB.collection("users").document(UID).update("chargers", myData)
+                }
+                .addOnFailureListener{ Log.i("firebase", "failed")}
+
+
 
             //NOW we can finally move on to the rest of the regular registration
             findNavController().navigate(R.id.action_register_navigation_seller_part2_to_register_navigation_allUsers_part1)

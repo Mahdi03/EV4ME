@@ -76,7 +76,7 @@ class RegisterActivityTest {
 
             onView(withId(R.id.input_email))
                 .perform(typeText(generateRandomEmail(5, "test.co")))
-                //.perform(typeText("a@a.com"))
+            //.perform(typeText("a@a.com"))
             onView(withId(R.id.input_password)).perform(typeText("password"))
             onView(withId(R.id.input_confirmPassword)).perform(typeText("password"))
 
@@ -148,7 +148,7 @@ class RegisterActivityTest {
             //We need to scroll to these views because they fall out of the layout's viewport
             onView(withId(R.id.input_numChargers))
                 .perform(scrollTo())
-                .perform(typeText("1"))
+                .perform(typeText("1")) //switch to 1 if you only want 1
             onView(withId(R.id.nextPageButton))
                 .perform(scrollTo())
                 .perform(click())
@@ -303,6 +303,5 @@ abstract class Instruction {
 
     abstract fun checkCondition(): Boolean
 }
-
 
 
