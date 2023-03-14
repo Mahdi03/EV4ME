@@ -1,14 +1,22 @@
 package com.aims.ev4me
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.util.Log
 import android.util.Patterns
 import com.google.android.gms.maps.model.LatLng
 import io.ktor.client.*
 import io.ktor.client.request.*
 import io.ktor.http.*
+import io.ktor.utils.io.errors.*
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
+import java.io.InputStream
+import java.net.HttpURLConnection
+import java.net.URL
+
 
 /**
  * Used to check whether a string can be validified as an email
@@ -77,3 +85,20 @@ suspend fun sendHTTPRequest(url: String): String {
     return response
 }
 
+fun getBitmapFromURL(src: String): Bitmap? {
+    return try {
+        //Log.e("src", src)
+        val url = URL(src)
+        val connection: HttpURLConnection = url.openConnection() as HttpURLConnection
+        connection.doInput = true
+        connection.connect()
+        val input: InputStream = connection.inputStream
+        val myBitmap = BitmapFactory.decodeStream(input)
+        //Log.e("Bitmap", "returned")
+        myBitmap
+    } catch (e: IOException) {
+        e.printStackTrace()
+        e.message?.let { Log.e("HelperFunctions.kt", it) }
+        null
+    }
+}

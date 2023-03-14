@@ -94,7 +94,13 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
             mapViewBundle = Bundle()
             outState.putBundle(MAPVIEW_BUNDLE_KEY, mapViewBundle)
         }
-        mapView.onSaveInstanceState(mapViewBundle)
+        try {
+            mapView.onSaveInstanceState(mapViewBundle)
+        }
+        catch (e: Exception) {
+            Log.v("HomeFragment.kt", "IDC")
+            e.printStackTrace()
+        }
     }
 
     override fun onStart() {

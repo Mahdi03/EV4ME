@@ -8,7 +8,6 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.aims.ev4me.databinding.FragmentChargerDashboardLenderBinding
-import com.aims.ev4me.databinding.FragmentChargerDashboardUserBinding
 
 class ChargerDashboardLenderFragment : Fragment() {
 
@@ -33,6 +32,9 @@ class ChargerDashboardLenderFragment : Fragment() {
         chargerDashboardLenderViewModel.text.observe(viewLifecycleOwner) {
             textView.text = it
         }
+
+
+
         return root
     }
 
