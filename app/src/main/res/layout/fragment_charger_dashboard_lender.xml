@@ -20,15 +20,13 @@
     <TextView
         android:layout_width="75dp"
         android:layout_height="wrap_content"
-        android:text="Address"
+        android:text="Address:"
         android:textAlignment="center" />
 
-    <!-- TODO: add link to directions -->
     <TextView
-        android:id="@+id/AddressTextView"
+        android:id="@+id/addressTextView"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:text="149 Temp Address Dr., Change this-CA, 94582" />
+        android:layout_height="40dp" />
 
     <!-- Lender Contact Info -->
     <TextView
