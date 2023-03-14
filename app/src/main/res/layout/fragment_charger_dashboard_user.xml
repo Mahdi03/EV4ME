@@ -7,6 +7,12 @@
     tools:context=".ui.main_activity.charger_dashboard.user.ChargerDashboardUserFragment"
     android:orientation="vertical">
 
+    <ImageView
+        android:id="@+id/googleMapStaticImage"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:contentDescription="Static image of map of charger location" />
+
     <TextView
         android:id="@+id/text_dashboard"
         android:layout_width="match_parent"
