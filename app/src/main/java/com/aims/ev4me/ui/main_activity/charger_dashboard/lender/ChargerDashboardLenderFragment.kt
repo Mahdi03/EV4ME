@@ -29,10 +29,9 @@ class ChargerDashboardLenderFragment : Fragment() {
         _binding = FragmentChargerDashboardLenderBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textDashboard
-        chargerDashboardLenderViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
-        }
+        val textView: TextView = binding.AddressTextView
+        textView.text = "<a href = 'google.com'> 149 Temp Address Dr., Change this-CA, 94582 </a>"
+        textView.setMovementMethod(LinkMovementMethod.getInstance())
         return root
     }
 

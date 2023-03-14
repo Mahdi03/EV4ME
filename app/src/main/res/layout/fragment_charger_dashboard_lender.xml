@@ -4,19 +4,40 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".ui.main_activity.charger_dashboard.lender.ChargerDashboardLenderFragment">
 
+
+    <!-- EV4ME logo -->
     <TextView
-        android:id="@+id/text_dashboard"
         android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:layout_marginBottom="25dp"
+        android:background="@drawable/logo" />
+
+
+    <!-- Address Title -->
+    <TextView
+        android:layout_width="75dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:text="Address"
+        android:textAlignment="center" />
+
+    <!-- TODO: add link to directions -->
+    <TextView
+        android:id="@+id/AddressTextView"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:text="149 Temp Address Dr., Change this-CA, 94582" />
+
+    <!-- Lender Contact Info -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:text="Lender Contact "
+        />
+
+
+
+
 </LinearLayout>
