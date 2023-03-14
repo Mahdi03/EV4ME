@@ -89,8 +89,10 @@ class Registration_sellerPart2Fragment : Fragment() {
             val id: String = "1"
             var charger_base: ChargerStatus = ChargerStatus(id)
 
+            //Uncomment These 2 Lines for Realtime Emulator
 //            val databaseEmulator = Firebase.database
 //            databaseEmulator.useEmulator("10.0.2.2", 9000)
+            // Uncomment These 2 Lines for Real Realtime Database
             var databaseReal: DatabaseReference
             databaseReal = Firebase.database.reference
             var latlng1: Any?
