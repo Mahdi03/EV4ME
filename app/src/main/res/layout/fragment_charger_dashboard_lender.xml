@@ -4,20 +4,38 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.main_activity.charger_dashboard.lender.ChargerDashboardLenderFragment"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".ui.main_activity.charger_dashboard.lender.ChargerDashboardLenderFragment">
+
+
+    <!-- EV4ME logo -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:layout_marginBottom="25dp"
+        android:background="@drawable/logo" />
+
+
+    <!-- Address Title -->
+    <TextView
+        android:layout_width="75dp"
+        android:layout_height="wrap_content"
+        android:text="Address:"
+        android:textAlignment="center" />
 
     <TextView
-        android:id="@+id/text_dashboard"
+        android:id="@+id/addressTextView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_height="40dp" />
+
+    <!-- Lender Contact Info -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:text="Lender Contact "
+        />
+
+
+
+
 </LinearLayout>
