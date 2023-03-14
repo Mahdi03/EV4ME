@@ -59,6 +59,7 @@ class existsViewWithID(override val description: String, override val id: Int) :
     Instruction() {
     override fun checkCondition(): Boolean {
         //Nah cuz what is Kotlin
+        //FR WHAT IS KOTLIN
         val viewFound = try {
             onView(withId(id)).perform(click())
             true

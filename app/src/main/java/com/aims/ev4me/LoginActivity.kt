@@ -71,7 +71,7 @@ class LoginActivity : AppCompatActivity() {
         // Opening the login page should add info to database
 //        val database = Firebase.database
 //        database.useEmulator("10.0.2.2", 9000)
-//        database.getReference().child("Test2").setValue("Hello World")
+        //database.getReference().child("Test").setValue("Hello World")
         // Testing HashMap Stuff to make sure it modified properly, it does!
 //        var hashMap: HashMap<String, Int> = HashMap<String, Int> ()
 //        hashMap.put("Akshay", 20)

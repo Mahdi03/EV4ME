@@ -10,7 +10,19 @@ data class ChargerStatus(val listingID: String) {
     var chargerPrice: Int=0
     var isChargerUsed: Boolean=false
     var chargerType: ChargerInfo.ChargerType=ChargerInfo.ChargerType.NO_LEVEL
-
+    var chargerName: String=""
+    fun toHashMap(): HashMap<String, Any> {
+        return hashMapOf(
+            "addressString" to addressString,
+            "addressLatLng" to addressLatLng,
+            "averageRating" to averageRating,
+            "numRatings" to numRatings,
+            "chargerPrice" to chargerPrice,
+            "isChargerUsed" to isChargerUsed,
+            "chargerType" to chargerType,
+            "chargerName" to chargerName
+        )
+    }
 }
 
 

@@ -12,9 +12,11 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.aims.ev4me.convertAddressToLatLng
 import com.aims.ev4me.databinding.FragmentRegistrationSellerPart1Binding
+import com.aims.ev4me.ui.register_activity.seller.part2.ChargerStatus
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.runBlocking
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.ktx.database
 import com.google.firebase.firestore.ktx.firestore
 
 class Registration_sellerPart1Fragment : Fragment() {
@@ -51,40 +53,6 @@ class Registration_sellerPart1Fragment : Fragment() {
         inputZipCode = binding.inputZipCode
         numChargersInput = binding.inputNumChargers
 
-        //moved to nextpagebutton
-//        var fullAddress: String = ""
-//        if (!binding.inputAptBuilding.text.toString().isBlank()) {
-//            fullAddress =
-//                inputStreetAddress.toString() + input_apt_building.toString() +
-//                        ", " + inputCity.toString() + ", " + inputState.toString() +
-//                        inputZipCode.toString() + inputCountry.toString()
-//        }
-//        else {
-//            fullAddress =
-//                inputStreetAddress.toString() + ", " + inputCity.toString() +
-//                        ", " + inputState.toString() + inputZipCode.toString() +
-//                        inputCountry.toString()
-//        }
-//        val input_latlng = runBlocking {convertAddressToLatLng(fullAddress) }
-        //maybe should move to nextpagebutton
-//        val realtimeDB: DatabaseReference
-//        realtimeDB = FirebaseDatabase.getInstance().getReference("Listings")
-//        val database = Firebase.database
-//        database.useEmulator("10.0.2.2", 9000)
-//        database.getReference().child("Test").setValue("Hello World")
-//        var hashMap: HashMap<String, Int> = HashMap<String, Int> ()
-//        hashMap.put("Akshay", 20)
-//        hashMap.put("Manasvi", 14)
-//        hashMap.put("Anikait", 147)
-//
-//        database.getReference().child("Test").child("Test Child").updateChildren(hashMap as Map<String, Int>)
-
-        //val listingID = database.push().key!!
-        //var chargerStatus = ChargerStatus(listingID)
-//        chargerStatus.addressString=fullAddress
-//        chargerStatus.addressLatLng=input_latlng
-//
-//        realtimeDB.child(listingID).setValue(listingID)
 
 
         nextPageButton.setOnClickListener {
