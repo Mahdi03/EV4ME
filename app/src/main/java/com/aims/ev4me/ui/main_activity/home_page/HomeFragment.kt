@@ -19,6 +19,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.aims.ev4me.databinding.FragmentHomeBinding
+import com.aims.ev4me.ui.register_activity.seller.part2.ChargerListing
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -27,6 +28,10 @@ import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
+import com.google.firebase.database.ChildEventListener
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ktx.getValue
 import com.google.maps.android.ktx.cameraMoveEvents
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
@@ -44,6 +49,8 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
 
     private lateinit var mapView: MapView
     private var googleMap: GoogleMap? = null
+    //Just start off with it initialized so that we can add stuff to it
+    private var chargerListingsByID = HashMap<String, ChargerListing>()
 
 
 
@@ -72,6 +79,43 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         }
         else {
             requestLocationPermissions()
+        }
+
+        //After we request location permissions, let's load database data before init map
+
+        //We need to fetch database info
+        val databaseChildEventListener = object : ChildEventListener {
+            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                //We need to add this to our general main object
+                val newChargerListing = snapshot.getValue<ChargerListing>()!!
+                val chargerListingKeyToAdd = snapshot.key!!
+                chargerListingsByID[chargerListingKeyToAdd] = newChargerListing
+                //TODO: send the general object back to the flow
+            }
+
+            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+                //we need to reflect this child's changes in the general main object
+                val newChargerListing = snapshot.getValue<ChargerListing>()!!
+                val chargerListingKeyToChange = snapshot.key!!
+                chargerListingsByID[chargerListingKeyToChange] = newChargerListing
+                //TODO: send the general object back to the flow
+            }
+
+            override fun onChildRemoved(snapshot: DataSnapshot) {
+                //remove this child from our general main object
+                val chargerListingKeyToRemove = snapshot.key!!
+                chargerListingsByID.remove(chargerListingKeyToRemove)
+                //TODO: send back to flow
+            }
+
+            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+                //I don't think this one really matters for us???
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("HomeFragment.kt", "The database listener was cancelled", error.toException())
+            }
+
         }
 
         var mapViewBundle: Bundle? = null
