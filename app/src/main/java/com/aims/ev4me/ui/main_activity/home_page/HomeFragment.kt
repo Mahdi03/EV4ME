@@ -24,6 +24,7 @@ import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.GoogleMap.OnCameraMoveStartedListener
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.CameraPosition
@@ -233,9 +234,21 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
             }
         }
         updateCurrentLocation()
+        var touchMovementFlag: Boolean = false
+        googleMap!!.setOnCameraMoveStartedListener {reason ->
+            when (reason) {
+                OnCameraMoveStartedListener.REASON_GESTURE -> {
+                    touchMovementFlag = true
+                }
+            }
+
+        }
         googleMap!!.setOnCameraIdleListener {
-            collectPoints()
-            //TODO: Here we want to update the flow again and then change the google map marker
+            if (touchMovementFlag) {
+                //Here we want to update the flow again and then change the google map marker
+                collectPoints()
+                touchMovementFlag = false
+            }
         }
         lifecycleScope.launchWhenCreated {
             googleMap!!.cameraMoveEvents().collect {
@@ -259,8 +272,13 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
 
     private fun placeMarkersOnMapFromChargerListings(listOfChargerListingsToPlaceOnMap: ArrayList<ChargerListing>) {
         //We don't want to update any markers that already exist unnecessarily
+        googleMap!!.clear()
         for (chargerListing in listOfChargerListingsToPlaceOnMap) {
-            googleMap!!.addMarker(MarkerOptions().position(chargerListing.addressLatLng.getLatLng()))
+            googleMap!!.addMarker(MarkerOptions()
+                .position(chargerListing.addressLatLng.getLatLng())
+                .title(chargerListing.chargerName)
+                .snippet(chargerListing.addressString)
+            )
         }
     }
 
