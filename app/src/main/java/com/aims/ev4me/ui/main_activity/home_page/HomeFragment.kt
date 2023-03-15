@@ -229,6 +229,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         }
         updateCurrentLocation()
 
+        collectPoints()
         //Use gesture-driven events to keep track of when they move the map as to update the map
         var touchMovementFlag: Boolean = false
         googleMap!!.setOnCameraMoveStartedListener {reason ->
@@ -258,10 +259,12 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun collectPoints() {
-        lifecycleScope.launch {
-            ChargerListingsChangeHandlerForMapMarkers(googleMap!!, chargerListingsByID).initFlow()
-            .collect {listOfChargerListingsToPlaceOnMap ->
-                placeMarkersOnMapFromChargerListings(listOfChargerListingsToPlaceOnMap)
+        googleMap?.let {
+            lifecycleScope.launch {
+                ChargerListingsChangeHandlerForMapMarkers(googleMap!!, chargerListingsByID).initFlow()
+                    .collect {listOfChargerListingsToPlaceOnMap ->
+                        placeMarkersOnMapFromChargerListings(listOfChargerListingsToPlaceOnMap)
+                    }
             }
         }
     }
