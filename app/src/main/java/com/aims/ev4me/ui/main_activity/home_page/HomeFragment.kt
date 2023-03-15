@@ -28,12 +28,15 @@ import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
-import com.google.firebase.database.ChildEventListener
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
+import com.google.android.gms.maps.model.MarkerOptions
+import com.google.firebase.database.*
+import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
+import com.google.firebase.ktx.Firebase
 import com.google.maps.android.ktx.cameraMoveEvents
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 
 
 class HomeFragment : Fragment(), OnMapReadyCallback {
@@ -49,9 +52,10 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
 
     private lateinit var mapView: MapView
     private var googleMap: GoogleMap? = null
+
     //Just start off with it initialized so that we can add stuff to it
     private var chargerListingsByID = HashMap<String, ChargerListing>()
-
+    private lateinit var chargerListingsFlowForMapMarkers: Flow<ArrayList<ChargerListing>>
 
 
     override fun onCreateView(
@@ -76,14 +80,35 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
 
         if (locationPermissionsGranted()) {
             checkLocationSettings()
-        }
-        else {
+        } else {
             requestLocationPermissions()
         }
 
         //After we request location permissions, let's load database data before init map
 
+
         //We need to fetch database info
+        //val faketimeDB = Firebase.database
+        //faketimeDB.useEmulator("10.0.2.2", 9000)
+        val realtimeDB: DatabaseReference = Firebase.database.reference
+
+        realtimeDB.child("Listings").addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for (chargerListingSnapshot in snapshot.children) {
+                    Log.i("HomeFragment.kt", chargerListingSnapshot.value.toString())
+                    chargerListingsByID[chargerListingSnapshot.key as String] = chargerListingSnapshot.getValue<ChargerListing>()!!
+                }
+                //chargerListingsByID = snapshot.getValue<HashMap<String, ChargerListing>>()!!
+                collectPoints()
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("HomeFragment.kt", "The database listener was cancelled", error.toException())
+            }
+
+        })
+
+
         val databaseChildEventListener = object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                 //We need to add this to our general main object
@@ -91,6 +116,8 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                 val chargerListingKeyToAdd = snapshot.key!!
                 chargerListingsByID[chargerListingKeyToAdd] = newChargerListing
                 //TODO: send the general object back to the flow
+                collectPoints()
+                Log.i("HomeFragment.kt", "Child added")
             }
 
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
@@ -99,6 +126,8 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                 val chargerListingKeyToChange = snapshot.key!!
                 chargerListingsByID[chargerListingKeyToChange] = newChargerListing
                 //TODO: send the general object back to the flow
+                collectPoints()
+                Log.i("HomeFragment.kt", "Child changed")
             }
 
             override fun onChildRemoved(snapshot: DataSnapshot) {
@@ -106,6 +135,8 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                 val chargerListingKeyToRemove = snapshot.key!!
                 chargerListingsByID.remove(chargerListingKeyToRemove)
                 //TODO: send back to flow
+                collectPoints()
+                Log.i("HomeFragment.kt", "Child removed")
             }
 
             override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
@@ -117,6 +148,8 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
             }
 
         }
+
+        realtimeDB.child("Listings").addChildEventListener(databaseChildEventListener)
 
         var mapViewBundle: Bundle? = null
         if (savedInstanceState != null) {
@@ -140,8 +173,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         }
         try {
             mapView.onSaveInstanceState(mapViewBundle)
-        }
-        catch (e: Exception) {
+        } catch (e: Exception) {
             Log.v("HomeFragment.kt", "IDC")
             e.printStackTrace()
         }
@@ -174,6 +206,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         super.onStop()
         mapView.onStop()
     }
+
     override fun onDestroy() {
         //mapView.onDestroy() - don't destroy the map twice..memory leaks on accident
         super.onDestroy()
@@ -183,31 +216,51 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         super.onLowMemory()
         mapView.onLowMemory()
     }
+
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun onMapReady(mGoogleMap: GoogleMap) {
         googleMap = mGoogleMap
+        chargerListingsFlowForMapMarkers = ChargerListingsChangeHandlerForMapMarkers(googleMap!!, chargerListingsByID).initFlow()
         //googleMap!!.addMarker(MarkerOptions().position(LatLng(0.0, 0.0)).title("Marker"))
         //TODO: We need to spawn the camera at the location where the user is
         if (locationPermissionsGranted()) {
             try {
                 googleMap!!.isMyLocationEnabled = true
-            }
-            catch (e: SecurityException) {
+            } catch (e: SecurityException) {
                 //They did not grant permissions, call failed
                 Log.e("HomeFragment.kt", "Location permissions were not granted", e)
                 requestLocationPermissions()
             }
         }
         updateCurrentLocation()
+        googleMap!!.setOnCameraIdleListener {
+            collectPoints()
+            //TODO: Here we want to update the flow again and then change the google map marker
+        }
         lifecycleScope.launchWhenCreated {
             googleMap!!.cameraMoveEvents().collect {
                 //TODO: This will be called every time we move the map, so use this to refresh the locations
                 // of charging spots nearby (within the camera view)
 
-                //TODO: be careful this runs every frame AS we are moving the
-                // camera or when the camera automatically moves
                 Log.v("HomeFragment", "We moved the mappp")
             }
+
+        }
+    }
+
+    private fun collectPoints() {
+        lifecycleScope.launch {
+            ChargerListingsChangeHandlerForMapMarkers(googleMap!!, chargerListingsByID).initFlow()
+            .collect {listOfChargerListingsToPlaceOnMap ->
+                placeMarkersOnMapFromChargerListings(listOfChargerListingsToPlaceOnMap)
+            }
+        }
+    }
+
+    private fun placeMarkersOnMapFromChargerListings(listOfChargerListingsToPlaceOnMap: ArrayList<ChargerListing>) {
+        //We don't want to update any markers that already exist unnecessarily
+        for (chargerListing in listOfChargerListingsToPlaceOnMap) {
+            googleMap!!.addMarker(MarkerOptions().position(chargerListing.addressLatLng.getLatLng()))
         }
     }
 
@@ -234,9 +287,12 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                                     }.build()
                                 )
                             )
-                        }
-                        catch (e: NullPointerException) {
-                            Log.e("HomeFragment.kt", "Probably tried to update the map's location when the user already selected another page", e)
+                        } catch (e: NullPointerException) {
+                            Log.e(
+                                "HomeFragment.kt",
+                                "Probably tried to update the map's location when the user already selected another page",
+                                e
+                            )
                         }
 
                     } else {
@@ -244,8 +300,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                         updateCurrentLocation()
                     }
                 }
-        }
-        catch (e: SecurityException) {
+        } catch (e: SecurityException) {
             //They did not grant permissions, call failed
             Log.e("HomeFragment.kt", "Location permissions were not granted", e)
             requestLocationPermissions()
@@ -253,20 +308,24 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun locationPermissionsGranted() = LOCATION_PERMISSIONS.all { it ->
-        activity?.let { itt -> ContextCompat.checkSelfPermission(itt.baseContext, it) } == PackageManager.PERMISSION_GRANTED
+        activity?.let { itt ->
+            ContextCompat.checkSelfPermission(
+                itt.baseContext,
+                it
+            )
+        } == PackageManager.PERMISSION_GRANTED
     }
 
     private val permissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
-    ) {
-        isGranted ->
+    ) { isGranted ->
         if (isGranted) {
 
-        }
-        else {
+        } else {
 
         }
     }
+
     private fun requestLocationPermissions() {
 
         activity?.let {
@@ -282,8 +341,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         }
         if (!locationPermissionsGranted()) {
             requestLocationPermissions()
-        }
-        else {
+        } else {
             updateCurrentLocation()
         }
     }
@@ -299,12 +357,14 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         val locationSettings = LocationSettingsRequest.Builder().apply {
             addLocationRequest(locationRequest)
         }.build()
-        val checkLocationSettingsTask = activity?.let { LocationServices.getSettingsClient(it).checkLocationSettings(locationSettings) }
+        val checkLocationSettingsTask = activity?.let {
+            LocationServices.getSettingsClient(it).checkLocationSettings(locationSettings)
+        }
         checkLocationSettingsTask?.addOnSuccessListener {
             //Now we can use their location
             updateCurrentLocation()
         }
-        checkLocationSettingsTask?.addOnFailureListener{ exception ->
+        checkLocationSettingsTask?.addOnFailureListener { exception ->
             if (exception is ResolvableApiException) {
                 //We can do something to fix the issue in settings
                 try {
@@ -336,8 +396,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                 if (locationPermissionsGranted()) {
                     //TODO: Now we can get their current location and set the map's camera to it
                     updateCurrentLocation()
-                }
-                else {
+                } else {
                     //Nah, run that back until they get it right
                     requestLocationPermissions()
                 }
@@ -348,7 +407,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        when(requestCode) {
+        when (requestCode) {
             LOCATION_SETTINGS_REQUEST_CODE -> {
                 when (resultCode) {
                     Activity.RESULT_OK -> {
@@ -373,13 +432,14 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         private val LOCATION_PERMISSIONS = mutableListOf(
             Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.ACCESS_FINE_LOCATION
-        ).apply {  }.toTypedArray()
+        ).apply { }.toTypedArray()
         private const val LOCATION_PERMISSIONS_REQUEST_CODE = 20
         private const val LOCATION_SETTINGS_REQUEST_CODE = 30
 
         //Constants working with Google Maps
 
-        private const val GOOGLE_MAPS_ZOOM = 12.5F //TODO: Customize the zoom to the right level of default zoom
+        private const val GOOGLE_MAPS_ZOOM =
+            12.5F //TODO: Customize the zoom to the right level of default zoom
     }
 
 }

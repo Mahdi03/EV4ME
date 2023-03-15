@@ -15,6 +15,7 @@ import com.aims.ev4me.databinding.FragmentRegistrationSellerPart2Binding
 import com.aims.ev4me.ui.register_activity.seller.part2.ChargerInfo
 import com.aims.ev4me.ui.register_activity.seller.part2.ChargerInfoRecyclerViewAdapter
 import com.aims.ev4me.ui.register_activity.seller.part2.ChargerListing
+import com.aims.ev4me.ui.register_activity.seller.part2.MyLatLng
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DatabaseReference
@@ -123,7 +124,7 @@ class Registration_sellerPart2Fragment : Fragment() {
                         val chargerListing = addressString?.let { myAddressString ->
                             latLong?.let { myLatLong ->
                                 ChargerListing(addressString = myAddressString,
-                                    addressLatLng = myLatLong, chargerType = chargerInfo.chargerType,
+                                    addressLatLng = MyLatLng(myLatLong.latitude, myLatLong.longitude), chargerType = chargerInfo.chargerType,
                                     chargerName = chargerInfo.chargerName)
                             }
                         }
