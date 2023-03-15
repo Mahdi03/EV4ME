@@ -108,4 +108,11 @@
         tools:layout_editor_absoluteX="272dp"
         tools:layout_editor_absoluteY="434dp" />
 
+    <Button
+        android:id="@+id/chargerBookingButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Book Now!"
+        />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
