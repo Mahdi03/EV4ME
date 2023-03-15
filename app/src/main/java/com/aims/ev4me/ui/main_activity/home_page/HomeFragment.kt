@@ -27,9 +27,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.GoogleMap.OnCameraMoveStartedListener
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.model.CameraPosition
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.*
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
@@ -278,6 +276,9 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                 .title(chargerListing.chargerName)
                     //Send over all chargerListing info to window adapter using JSON serialization
                 .snippet(Json.encodeToString(ChargerListing.serializer(), chargerListing))
+                .icon(BitmapDescriptorFactory.defaultMarker(
+                    if (chargerListing.isChargerUsed) {BitmapDescriptorFactory.HUE_MAGENTA} else {BitmapDescriptorFactory.HUE_RED}
+                ))
             )
         }
 
