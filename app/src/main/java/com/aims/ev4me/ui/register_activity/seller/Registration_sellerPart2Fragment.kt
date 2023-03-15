@@ -1,7 +1,6 @@
 package com.aims.ev4me.ui.register_activity.seller
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,12 +14,10 @@ import com.aims.ev4me.R
 import com.aims.ev4me.databinding.FragmentRegistrationSellerPart2Binding
 import com.aims.ev4me.ui.register_activity.seller.part2.ChargerInfo
 import com.aims.ev4me.ui.register_activity.seller.part2.ChargerInfoRecyclerViewAdapter
-import com.aims.ev4me.ui.register_activity.seller.part2.ChargerStatus
+import com.aims.ev4me.ui.register_activity.seller.part2.ChargerListing
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ktx.database
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -35,8 +32,7 @@ class Registration_sellerPart2Fragment : Fragment() {
 
 
     private lateinit var recyclerView: RecyclerView
-    private var arrayList = ArrayList<ChargerInfo>()
-    private var arrayListRealtime = ArrayList<ChargerStatus>()
+    private var arrListOfEmptyChargerInfoForRecyclerViewToPopulate = ArrayList<ChargerInfo>()
     private lateinit var finishRegistrationButton: Button
     private lateinit var recyclerViewAdapter: ChargerInfoRecyclerViewAdapter
 
@@ -54,22 +50,21 @@ class Registration_sellerPart2Fragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
         val numChargers: Int = navigationArgs.numChargers
-        //TODO: Use this value now
+        //Use this value now
 
         //Populate an empty arrayList of a certain number of elements that will then be affected by the recyclerview's adapter
         for (i in 1..numChargers) {
-            arrayList.add(ChargerInfo(chargerName="", chargerType=ChargerInfo.ChargerType.NO_LEVEL))
-            //arrayListRealtime.add(ChargerStatus(addressString = ))
+            arrListOfEmptyChargerInfoForRecyclerViewToPopulate.add(ChargerInfo(chargerName="", chargerType=ChargerInfo.ChargerType.NO_LEVEL))
         }
 
-        recyclerViewAdapter = context?.let { ChargerInfoRecyclerViewAdapter(it, arrayList) }!!
+        recyclerViewAdapter = context?.let { ChargerInfoRecyclerViewAdapter(it, arrListOfEmptyChargerInfoForRecyclerViewToPopulate) }!!
         recyclerView.adapter = recyclerViewAdapter
 
         finishRegistrationButton = binding.finishRegistrationButton
         finishRegistrationButton.setOnClickListener {
-            val myFinalArrayList: ArrayList<ChargerInfo> = recyclerViewAdapter.arrayList
+            val arrListOfAllChargerDataFromRecyclerView: ArrayList<ChargerInfo> = recyclerViewAdapter.arrayList
             var validationPassed = true
-            for (i: Int in 0 until myFinalArrayList.size) {
+            for (i: Int in 0 until arrListOfAllChargerDataFromRecyclerView.size) {
                 val viewHolder: ChargerInfoRecyclerViewAdapter.ViewHolder? = recyclerView.findViewHolderForAdapterPosition(i) as ChargerInfoRecyclerViewAdapter.ViewHolder?
                 //So this ugly-ass loop will only overwrite our validation if it is false, if it is true
                 // we don't want to touch it since something else could have already set our flag to false
@@ -80,56 +75,75 @@ class Registration_sellerPart2Fragment : Fragment() {
             }
             if (!validationPassed) { return@setOnClickListener; }
 
+            //Now that we've made it this far, let's store the data in both databases
             val firestoreDB = Firebase.firestore
             val auth = Firebase.auth
             val UID = auth.currentUser?.uid!!
 
-            //TODO: Save all this data to the database under their UUID
-            //Add charger to realtime database (acting like a server)
-            val id: String = "1"
-            var charger_base: ChargerStatus = ChargerStatus(id)
 
-            //Uncomment These 2 Lines for Realtime Emulator
-//            val databaseEmulator = Firebase.database
-//            databaseEmulator.useEmulator("10.0.2.2", 9000)
-            // Uncomment These 2 Lines for Real Realtime Database
-            var databaseReal: DatabaseReference
-            databaseReal = Firebase.database.reference
-            var latlng1: Any?
+            //Start with the Real time DB, since pushing it will return a unique ID we can then save in firestore
 
+            // all the chargers they add here will have the same address belonging to this current user so first get the address string and the latlong
+            var latLong: LatLng?
+            var addressString: String?
             firestoreDB.collection("users").document(UID).get()
-                .addOnSuccessListener {
-                    latlng1 = it["latLng"]
-                    var lat1 = ((latlng1 as HashMap<String, Any>)["latitude"]).toString().toDouble()
-                    var lng1 = ((latlng1 as HashMap<String, Any>)["longitude"]).toString().toDouble()
-                    val latLngRT: LatLng = LatLng(lat1, lng1)
-                    charger_base.addressLatLng = latLngRT
-                    charger_base.addressString = it["address"].toString()
-                    Log.i("firebase 1", charger_base.addressLatLng.toString())
-                    val myData = ArrayList<HashMap<String, String>>()
-                    var i: Int = 0
-                    for (chargerInfo in myFinalArrayList) {
-                        Log.v("Registration_sellerPart2Fragment.kt", chargerInfo.toString())
-                        // for firestore:
-                        myData.add(chargerInfo.toHashMap())
-                        // rest is for realtime:
-                        var charger = ChargerStatus(listingID = UID+i.toString())
-                        charger.chargerType=chargerInfo.chargerType
-                        charger.chargerName=chargerInfo.chargerName
-                        charger.addressLatLng=charger_base.addressLatLng
-                        charger.addressString=charger_base.addressString
-                        //databaseEmulator.getReference().child("Listings").child(UID+i.toString()).setValue(charger)
-                        databaseReal.child("Listings").child(UID+i.toString()).setValue(charger)
-                        Log.i("firebase", charger_base.addressLatLng.toString())
-                        Log.i("firebase 2", charger.chargerName)
-                        i++
+                .addOnSuccessListener {snapshot ->
+                    //Convert the LatLong of this user to a LatLng obj and store it for use
+                    val latLongHashMap: HashMap<String, Any> = snapshot["latLng"] as HashMap<String, Any>
+                    val latitude: Double = latLongHashMap["latitude"].toString().toDouble()
+                    val longitude: Double = latLongHashMap["longitude"].toString().toDouble()
+                    latLong = LatLng(latitude, longitude)
+
+                    //Store the string address of this user and store it for later use
+                    addressString = snapshot["address"].toString()
+
+
+                    //Now that we have the lat long and the string address from the Firestore DB pertaining
+                    // to this current seller, we can now attach it to every single charger they own
+                    //Now we want to upload each charger as its own listing, so loop through each charger,
+                    // create the listing with the information, and then after storing it in realtimeDB,
+                    // we will have our unique ID which we can then attach to the charger info and then
+                    // push to firebase firestore!!!!
+
+                    //Uncomment These 2 Lines for Realtime Emulator
+                    //val databaseEmulator = Firebase.database
+                    //databaseEmulator.useEmulator("10.0.2.2", 9000)
+                    // Uncomment These 2 Lines for Real Realtime Database
+                    val realtimeDB: DatabaseReference = Firebase.database.reference
+                    /*
+                    val faketimeDB = Firebase.database
+                    faketimeDB.useEmulator("10.0.2.2", 9000)
+                     */
+                    val arrListOfParceledChargerData = ArrayList<HashMap<String, String>>()
+
+                    arrListOfAllChargerDataFromRecyclerView.forEachIndexed { index, chargerInfo ->
+
+                        /*****************************Realtime Database**************************************/
+                        //Create ChargerListing
+                        val chargerListing = addressString?.let { myAddressString ->
+                            latLong?.let { myLatLong ->
+                                ChargerListing(addressString = myAddressString,
+                                    addressLatLng = myLatLong, chargerType = chargerInfo.chargerType,
+                                    chargerName = chargerInfo.chargerName)
+                            }
+                        }
+                        //Push this charger listing to Realtime Database (should later trigger all other clients to update)
+                        val newChargerListingLocationInDB = realtimeDB.child("Listings").push()
+                        //val newChargerListingLocationInDB = faketimeDB.reference.child("Listings").push()
+                        if (chargerListing != null) {
+                            newChargerListingLocationInDB.setValue(chargerListing.toHashMap())
+                        }
+
+                        //Now that we have pushed it into the database, we can store the ID in the charger info object
+                        /*****************************Firestore**************************************/
+                        //Add each charger data to the firestore database under the user
+                        arrListOfAllChargerDataFromRecyclerView[index].chargerUID =
+                            newChargerListingLocationInDB.key.toString()
+                        arrListOfParceledChargerData.add(chargerInfo.toHashMap())
                     }
-
-                    firestoreDB.collection("users").document(UID).update("chargers", myData)
+                    //Save all this data to the database under their UUID
+                    firestoreDB.collection("users").document(UID).update("chargers", arrListOfParceledChargerData)
                 }
-                .addOnFailureListener{ Log.i("firebase", "failed")}
-
-
 
             //NOW we can finally move on to the rest of the regular registration
             findNavController().navigate(R.id.action_register_navigation_seller_part2_to_register_navigation_allUsers_part1)
