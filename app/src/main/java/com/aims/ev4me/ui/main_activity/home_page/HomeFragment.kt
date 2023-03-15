@@ -36,8 +36,8 @@ import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 import com.google.maps.android.ktx.cameraMoveEvents
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json
 
 
 class HomeFragment : Fragment(), OnMapReadyCallback {
@@ -56,8 +56,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
 
     //Just start off with it initialized so that we can add stuff to it
     private var chargerListingsByID = HashMap<String, ChargerListing>()
-    private lateinit var chargerListingsFlowForMapMarkers: Flow<ArrayList<ChargerListing>>
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -87,7 +85,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
 
         //After we request location permissions, let's load database data before init map
 
-
         //We need to fetch database info
         //val faketimeDB = Firebase.database
         //faketimeDB.useEmulator("10.0.2.2", 9000)
@@ -99,7 +96,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                     Log.i("HomeFragment.kt", chargerListingSnapshot.value.toString())
                     chargerListingsByID[chargerListingSnapshot.key as String] = chargerListingSnapshot.getValue<ChargerListing>()!!
                 }
-                //chargerListingsByID = snapshot.getValue<HashMap<String, ChargerListing>>()!!
                 collectPoints()
             }
 
@@ -221,9 +217,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun onMapReady(mGoogleMap: GoogleMap) {
         googleMap = mGoogleMap
-        chargerListingsFlowForMapMarkers = ChargerListingsChangeHandlerForMapMarkers(googleMap!!, chargerListingsByID).initFlow()
-        //googleMap!!.addMarker(MarkerOptions().position(LatLng(0.0, 0.0)).title("Marker"))
-        //TODO: We need to spawn the camera at the location where the user is
+
         if (locationPermissionsGranted()) {
             try {
                 googleMap!!.isMyLocationEnabled = true
@@ -234,6 +228,8 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
             }
         }
         updateCurrentLocation()
+
+        //Use gesture-driven events to keep track of when they move the map as to update the map
         var touchMovementFlag: Boolean = false
         googleMap!!.setOnCameraMoveStartedListener {reason ->
             when (reason) {
@@ -252,13 +248,13 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         }
         lifecycleScope.launchWhenCreated {
             googleMap!!.cameraMoveEvents().collect {
-                //TODO: This will be called every time we move the map, so use this to refresh the locations
-                // of charging spots nearby (within the camera view)
+                //TODO: This will be called every time we move the map
 
-                Log.v("HomeFragment", "We moved the mappp")
+                //Log.v("HomeFragment", "We moved the mappp")
             }
 
         }
+        googleMap!!.setInfoWindowAdapter(context?.let { ChargerListingInfoWindowAdapter(it) })
     }
 
     private fun collectPoints() {
@@ -277,9 +273,11 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
             googleMap!!.addMarker(MarkerOptions()
                 .position(chargerListing.addressLatLng.getLatLng())
                 .title(chargerListing.chargerName)
-                .snippet(chargerListing.addressString)
+                    //Send over all chargerListing info to window adapter using JSON serialization
+                .snippet(Json.encodeToString(ChargerListing.serializer(), chargerListing))
             )
         }
+
     }
 
 
