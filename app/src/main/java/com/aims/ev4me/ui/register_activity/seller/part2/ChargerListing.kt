@@ -28,6 +28,7 @@ data class ChargerListing(var addressString: String, var addressLatLng: MyLatLng
     var numRatings: Int = 0
     var chargerPrice: Int = 0
     var isChargerUsed: Boolean = false
+    var chargerUID: String = "" //This is for our map's use only, don't export to hashmap to store in db
 
     fun toHashMap(): HashMap<String, Any> {
         return hashMapOf(

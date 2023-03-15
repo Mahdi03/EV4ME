@@ -18,6 +18,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.aims.ev4me.databinding.FragmentHomeBinding
 import com.aims.ev4me.ui.register_activity.seller.part2.ChargerListing
 import com.google.android.gms.common.api.ResolvableApiException
@@ -27,9 +28,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.GoogleMap.OnCameraMoveStartedListener
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.model.CameraPosition
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.*
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
@@ -90,20 +89,29 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         //faketimeDB.useEmulator("10.0.2.2", 9000)
         val realtimeDB: DatabaseReference = Firebase.database.reference
 
-        realtimeDB.child("Listings").addValueEventListener(object : ValueEventListener {
+        val initialDBEventListenerToFetchAllData = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 for (chargerListingSnapshot in snapshot.children) {
-                    Log.i("HomeFragment.kt", chargerListingSnapshot.value.toString())
-                    chargerListingsByID[chargerListingSnapshot.key as String] = chargerListingSnapshot.getValue<ChargerListing>()!!
+                    //Log.i("HomeFragment.kt", chargerListingSnapshot.value.toString())
+
+                    //Temporarily add the charger id inside the listing for when we only pass this in
+                    val chargerListingID = chargerListingSnapshot.key as String
+                    val chargerListing = chargerListingSnapshot.getValue<ChargerListing>()!!
+                    chargerListing.chargerUID = chargerListingID
+                    val isChargerUsed = chargerListingSnapshot.child("isChargerUsed").getValue<Boolean>()!!
+                    chargerListing.isChargerUsed = isChargerUsed
+                    chargerListingsByID[chargerListingID] = chargerListing
                 }
                 collectPoints()
+                realtimeDB.child("Listings").removeEventListener(this)
             }
 
             override fun onCancelled(error: DatabaseError) {
                 Log.e("HomeFragment.kt", "The database listener was cancelled", error.toException())
             }
 
-        })
+        }
+        realtimeDB.child("Listings").addValueEventListener(initialDBEventListenerToFetchAllData)
 
 
         val databaseChildEventListener = object : ChildEventListener {
@@ -111,6 +119,9 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                 //We need to add this to our general main object
                 val newChargerListing = snapshot.getValue<ChargerListing>()!!
                 val chargerListingKeyToAdd = snapshot.key!!
+                newChargerListing.chargerUID = chargerListingKeyToAdd //Temporarily add the charger id inside the listing for when we only pass this in
+                val isChargerUsed = snapshot.child("isChargerUsed").getValue<Boolean>()!!
+                newChargerListing.isChargerUsed = isChargerUsed
                 chargerListingsByID[chargerListingKeyToAdd] = newChargerListing
                 //TODO: send the general object back to the flow
                 collectPoints()
@@ -121,6 +132,9 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                 //we need to reflect this child's changes in the general main object
                 val newChargerListing = snapshot.getValue<ChargerListing>()!!
                 val chargerListingKeyToChange = snapshot.key!!
+                newChargerListing.chargerUID = chargerListingKeyToChange //Temporarily add the charger id inside the listing for when we only pass this in
+                val isChargerUsed = snapshot.child("isChargerUsed").getValue<Boolean>()!!
+                newChargerListing.isChargerUsed = isChargerUsed
                 chargerListingsByID[chargerListingKeyToChange] = newChargerListing
                 //TODO: send the general object back to the flow
                 collectPoints()
@@ -256,6 +270,16 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
 
         }
         googleMap!!.setInfoWindowAdapter(context?.let { ChargerListingInfoWindowAdapter(it) })
+        googleMap!!.setOnInfoWindowClickListener {
+            //Open the listing fragment and pass the it.snippet string as JSON to it
+            val jsonString = it.snippet
+            val action = jsonString?.let { it1 ->
+                HomeFragmentDirections.actionNavigationHomeToChargerListingInfo(it1)
+            }
+            if (action != null) {
+                findNavController().navigate(action)
+            }
+        }
     }
 
     private fun collectPoints() {
@@ -278,6 +302,9 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                 .title(chargerListing.chargerName)
                     //Send over all chargerListing info to window adapter using JSON serialization
                 .snippet(Json.encodeToString(ChargerListing.serializer(), chargerListing))
+                .icon(BitmapDescriptorFactory.defaultMarker(
+                    if (chargerListing.isChargerUsed) {BitmapDescriptorFactory.HUE_MAGENTA} else {BitmapDescriptorFactory.HUE_RED}
+                ))
             )
         }
 

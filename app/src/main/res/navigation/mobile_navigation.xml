@@ -9,8 +9,27 @@
         android:id="@+id/navigation_home"
         android:name="com.aims.ev4me.ui.main_activity.home_page.HomeFragment"
         android:label="@string/bottom_navbar_title_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_navigation_home_to_chargerListingInfo"
+            app:destination="@id/chargerListingInfo"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
 
+    <fragment
+        android:id="@+id/chargerListingInfo"
+        android:name="com.aims.ev4me.ui.main_activity.listing_info.ListingFragment"
+        android:label=""
+        tools:layout="@layout/fragment_listing">
+
+        <argument
+            android:name="chargerListingInfo"
+            app:argType="string"
+            android:defaultValue="" />
+    </fragment>
     <fragment
         android:id="@+id/navigation_dashboard_user"
         android:name="com.aims.ev4me.ui.main_activity.charger_dashboard.user.ChargerDashboardUserFragment"
