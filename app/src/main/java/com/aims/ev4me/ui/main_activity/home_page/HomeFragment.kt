@@ -18,6 +18,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.aims.ev4me.databinding.FragmentHomeBinding
 import com.aims.ev4me.ui.register_activity.seller.part2.ChargerListing
 import com.google.android.gms.common.api.ResolvableApiException
@@ -91,8 +92,13 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         realtimeDB.child("Listings").addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 for (chargerListingSnapshot in snapshot.children) {
-                    Log.i("HomeFragment.kt", chargerListingSnapshot.value.toString())
-                    chargerListingsByID[chargerListingSnapshot.key as String] = chargerListingSnapshot.getValue<ChargerListing>()!!
+                    //Log.i("HomeFragment.kt", chargerListingSnapshot.value.toString())
+
+                    //Temporarily add the charger id inside the listing for when we only pass this in
+                    val chargerListingID = chargerListingSnapshot.key as String
+                    val chargerListing = chargerListingSnapshot.getValue<ChargerListing>()!!
+                    chargerListing.chargerUID = chargerListingID
+                    chargerListingsByID[chargerListingID] = chargerListing
                 }
                 collectPoints()
             }
@@ -254,6 +260,16 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
 
         }
         googleMap!!.setInfoWindowAdapter(context?.let { ChargerListingInfoWindowAdapter(it) })
+        googleMap!!.setOnInfoWindowClickListener {
+            //Open the listing fragment and pass the it.snippet string as JSON to it
+            val jsonString = it.snippet
+            val action = jsonString?.let { it1 ->
+                HomeFragmentDirections.actionNavigationHomeToChargerListingInfo(it1)
+            }
+            if (action != null) {
+                findNavController().navigate(action)
+            }
+        }
     }
 
     private fun collectPoints() {
