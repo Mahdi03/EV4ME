@@ -7,7 +7,7 @@
     <string-array name="charger_types">
         <item>AC Level 1 (4–7 mph)</item>
         <item>AC Level 2 (28–32 mph)</item>
-        <item>DC Level 3 - (30 minutes to full charge)</item>
+        <!--<item>DC Level 3 - (30 minutes to full charge)</item>-->
     </string-array>
     <!--
     <string-array name="car_makes">
