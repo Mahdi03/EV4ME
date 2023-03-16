@@ -53,8 +53,57 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     private lateinit var mapView: MapView
     private var googleMap: GoogleMap? = null
 
+    private lateinit var realtimeDB: DatabaseReference
     //Just start off with it initialized so that we can add stuff to it
     private var chargerListingsByID = HashMap<String, ChargerListing>()
+
+    private val databaseChildEventListener = object : ChildEventListener {
+        override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+            //We need to add this to our general main object
+            val newChargerListing = snapshot.getValue<ChargerListing>()!!
+            val chargerListingKeyToAdd = snapshot.key!!
+            newChargerListing.chargerUID = chargerListingKeyToAdd //Temporarily add the charger id inside the listing for when we only pass this in
+            val isChargerUsed = snapshot.child("isChargerUsed").getValue<Boolean>()!!
+            newChargerListing.isChargerUsed = isChargerUsed
+            chargerListingsByID[chargerListingKeyToAdd] = newChargerListing
+            //TODO: send the general object back to the flow
+            collectPoints()
+            Log.i("HomeFragment.kt", "Child added")
+        }
+
+        override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+            //we need to reflect this child's changes in the general main object
+            val newChargerListing = snapshot.getValue<ChargerListing>()!!
+            val chargerListingKeyToChange = snapshot.key!!
+            newChargerListing.chargerUID = chargerListingKeyToChange //Temporarily add the charger id inside the listing for when we only pass this in
+            val isChargerUsed = snapshot.child("isChargerUsed").getValue<Boolean>()!!
+            newChargerListing.isChargerUsed = isChargerUsed
+            chargerListingsByID[chargerListingKeyToChange] = newChargerListing
+            //TODO: send the general object back to the flow
+            collectPoints()
+            Log.i("HomeFragment.kt", "Child changed")
+        }
+
+        override fun onChildRemoved(snapshot: DataSnapshot) {
+            //remove this child from our general main object
+            val chargerListingKeyToRemove = snapshot.key!!
+            chargerListingsByID.remove(chargerListingKeyToRemove)
+            //TODO: send back to flow
+            collectPoints()
+            Log.i("HomeFragment.kt", "Child removed")
+        }
+
+        override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+            //I don't think this one really matters for us???
+        }
+
+        override fun onCancelled(error: DatabaseError) {
+            Log.e("HomeFragment.kt", "The database listener was cancelled", error.toException())
+        }
+
+    }
+
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -87,7 +136,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         //We need to fetch database info
         //val faketimeDB = Firebase.database
         //faketimeDB.useEmulator("10.0.2.2", 9000)
-        val realtimeDB: DatabaseReference = Firebase.database.reference
+        realtimeDB = Firebase.database.reference
 
         val initialDBEventListenerToFetchAllData = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -112,53 +161,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
 
         }
         realtimeDB.child("Listings").addValueEventListener(initialDBEventListenerToFetchAllData)
-
-
-        val databaseChildEventListener = object : ChildEventListener {
-            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-                //We need to add this to our general main object
-                val newChargerListing = snapshot.getValue<ChargerListing>()!!
-                val chargerListingKeyToAdd = snapshot.key!!
-                newChargerListing.chargerUID = chargerListingKeyToAdd //Temporarily add the charger id inside the listing for when we only pass this in
-                val isChargerUsed = snapshot.child("isChargerUsed").getValue<Boolean>()!!
-                newChargerListing.isChargerUsed = isChargerUsed
-                chargerListingsByID[chargerListingKeyToAdd] = newChargerListing
-                //TODO: send the general object back to the flow
-                collectPoints()
-                Log.i("HomeFragment.kt", "Child added")
-            }
-
-            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-                //we need to reflect this child's changes in the general main object
-                val newChargerListing = snapshot.getValue<ChargerListing>()!!
-                val chargerListingKeyToChange = snapshot.key!!
-                newChargerListing.chargerUID = chargerListingKeyToChange //Temporarily add the charger id inside the listing for when we only pass this in
-                val isChargerUsed = snapshot.child("isChargerUsed").getValue<Boolean>()!!
-                newChargerListing.isChargerUsed = isChargerUsed
-                chargerListingsByID[chargerListingKeyToChange] = newChargerListing
-                //TODO: send the general object back to the flow
-                collectPoints()
-                Log.i("HomeFragment.kt", "Child changed")
-            }
-
-            override fun onChildRemoved(snapshot: DataSnapshot) {
-                //remove this child from our general main object
-                val chargerListingKeyToRemove = snapshot.key!!
-                chargerListingsByID.remove(chargerListingKeyToRemove)
-                //TODO: send back to flow
-                collectPoints()
-                Log.i("HomeFragment.kt", "Child removed")
-            }
-
-            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
-                //I don't think this one really matters for us???
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                Log.e("HomeFragment.kt", "The database listener was cancelled", error.toException())
-            }
-
-        }
 
         realtimeDB.child("Listings").addChildEventListener(databaseChildEventListener)
 
@@ -207,6 +209,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
 
 
     override fun onDestroyView() {
+        realtimeDB.child("Listings").removeEventListener(databaseChildEventListener)
         googleMap = null
         mapView.onDestroy()
         super.onDestroyView()

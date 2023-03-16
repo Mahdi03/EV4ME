@@ -1,5 +1,6 @@
 package com.aims.ev4me
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -62,6 +63,11 @@ class MainActivity : AppCompatActivity() {
                             )
                         )
                     }
+                    else -> {
+                        //Let's sign them out and send them back to the LoginActivity.kt
+                        Firebase.auth.signOut()
+                        goToLoginActivity()
+                    }
                 }
 
                 if (navController != null) {
@@ -85,4 +91,11 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    private fun goToLoginActivity() {
+        Log.d("ProfilePageFragment.kt", "Sign out successful, going to LoginActivity")
+        val loginActivityIntent = Intent(applicationContext, LoginActivity::class.java)
+        //We need to set these flags so that they can't come back to the login activity through the back stack without logging out
+        loginActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK) //Kotlin doesn't support |, use `or` instead
+        startActivity(loginActivityIntent)
+    }
 }
