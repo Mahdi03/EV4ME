@@ -31,17 +31,18 @@ class ChargerDashboardLenderFragment : Fragment() {
         _binding = FragmentChargerDashboardLenderBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.addressTextView
-        textView.text = "525 UCEN Rd, Isla Vista, CA 93117 USA"
+
+        //val textView: TextView = binding.addressTextView
+        //textView.text = "525 UCEN Rd, Isla Vista, CA 93117 USA"
 
         val latLongStr = "34.4115988,-119.8460491"
         //Set up google maps intent
         val googleMapsDirectionsIntent = Uri.parse("google.navigation:q=$latLongStr")
         val googleMapsIntent = Intent(Intent.ACTION_VIEW, googleMapsDirectionsIntent)
         googleMapsIntent.`package` = "com.google.android.apps.maps"
-        textView.setOnClickListener {
-            activity?.let { it1 -> startActivity(googleMapsIntent) }
-        }
+//        textView.setOnClickListener {
+//            activity?.let { it1 -> startActivity(googleMapsIntent) }
+//        }
 
         return root
     }

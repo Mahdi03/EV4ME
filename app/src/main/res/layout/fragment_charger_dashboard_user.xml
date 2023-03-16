@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.main_activity.charger_dashboard.user.ChargerDashboardUserFragment"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@drawable/bckg_2">
 
     <ImageView
         android:id="@+id/googleMapStaticImage"
@@ -14,16 +15,80 @@
         android:contentDescription="Static image of map of charger location" />
 
     <TextView
-        android:id="@+id/text_dashboard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
+        android:text="Charging Dashboard"
+        android:background="@color/black"
         android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:textColor="@color/white"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="5dp"
+        android:textSize="20sp" />
+    <TextView
+        android:id="@+id/usrdashboard_address"
+        android:text="Address: \n 525 UCEN Rd, Isla Vista, CA 93117 USA"
+        android:textColor="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="10dp"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/usrdashboard_lenderContact"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Lender Contact:\n Adam Smith"
+        android:textColor="@color/white"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="30dp"
+        android:layout_marginEnd="10dp"
+        android:textSize="20sp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="10sp"
+        android:text=""
+        android:background="@color/green_100"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:textSize="20sp" />
+    <TextView
+        android:id="@+id/chargingVehicle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Vehicle in Charge: Tesla Model S"
+        android:textColor="@color/white"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="30dp"
+        android:layout_marginEnd="10dp"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/chargeLevel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Charge Level: AC Level 2"
+        android:textColor="@color/white"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="30dp"
+        android:layout_marginEnd="10dp"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/timeLeft"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Time Remaining: 3:25"
+        android:textColor="@color/white"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="30dp"
+        android:layout_marginEnd="10dp"
+        android:textSize="20sp"/>
 </LinearLayout>

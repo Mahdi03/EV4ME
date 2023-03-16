@@ -113,7 +113,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="125dp"
                 android:backgroundTint="@color/gray_100"
-                android:text="No Account? Sign up here!"
+                android:text="No Account?\nSign up here!"
                 android:textAlignment="center"
                 android:textColor="@color/black" />
         </LinearLayout>
