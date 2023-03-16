@@ -12,30 +12,101 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="180dp"
-        android:layout_marginBottom="25dp"
+        android:layout_marginBottom="5dp"
         android:background="@drawable/logo" />
-
-
-    <!-- Address Title -->
     <TextView
-        android:layout_width="75dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Address:"
-        android:textAlignment="center" />
+        android:text="Charging Dashboard"
+        android:background="@color/gray_100"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="5dp"
+        android:textSize="20sp" />
 
     <TextView
-        android:id="@+id/addressTextView"
+        android:id="@+id/contactUser"
         android:layout_width="match_parent"
-        android:layout_height="40dp" />
+        android:layout_height="wrap_content"
+        android:text="Contact User:"
+        android:textColor="@color/black"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginEnd="10dp"
+        android:textSize="20sp" />
 
-    <!-- Lender Contact Info -->
+    <TextView
+        android:id="@+id/user"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="John Doe"
+        android:textColor="@color/black"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginEnd="10dp"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/userNumber"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="(938) 382-1029"
+        android:textColor="@color/black"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="30dp"
+        android:layout_marginEnd="10dp"
+        android:textSize="20sp" />
+
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:text="Lender Contact "
-        />
+        android:layout_height="wrap_content"
+        android:text=""
+        android:background="@color/black"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="5dp"
+        android:textSize="5sp" />
 
+    <TextView
+        android:id="@+id/chargingVehicle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Vehicle in Charge: Tesla Model S"
+        android:textColor="@color/black"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="30dp"
+        android:layout_marginEnd="10dp"
+        android:textSize="20sp" />
 
+    <TextView
+        android:id="@+id/chargeLevel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Charge Level: AC Level 2"
+        android:textColor="@color/black"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="30dp"
+        android:layout_marginEnd="10dp"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/timeLeft"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Time Remaining: 3:25"
+        android:textColor="@color/black"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="30dp"
+        android:layout_marginEnd="10dp"
+        android:textSize="20sp"/>
 
 
 </LinearLayout>

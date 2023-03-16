@@ -86,10 +86,11 @@ class ChargerDashboardUserFragment : Fragment() {
 
 
 
-        val textView: TextView = binding.textDashboard
-        chargerDashboardUserViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
-        }
+
+//        val textView: TextView = binding.textDashboard
+//        chargerDashboardUserViewModel.text.observe(viewLifecycleOwner) {
+//            textView.text = it
+//        }
         return root
     }
 
