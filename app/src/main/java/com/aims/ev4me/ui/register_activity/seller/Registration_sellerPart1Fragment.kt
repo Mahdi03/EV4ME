@@ -12,11 +12,9 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.aims.ev4me.convertAddressToLatLng
 import com.aims.ev4me.databinding.FragmentRegistrationSellerPart1Binding
-import com.aims.ev4me.ui.register_activity.seller.part2.ChargerStatus
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.runBlocking
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.ktx.database
 import com.google.firebase.firestore.ktx.firestore
 
 class Registration_sellerPart1Fragment : Fragment() {
@@ -40,7 +38,7 @@ class Registration_sellerPart1Fragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        activity?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        activity?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
         _binding = FragmentRegistrationSellerPart1Binding.inflate(inflater, container, false)
         val root: View = binding.root
 
