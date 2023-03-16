@@ -1,23 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/bckg_1">
     <!--TODO: Add all the basic user info here-->
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:textSize="30dp"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:text="Personal Information"/>
+
 
     <EditText
         android:id="@+id/input_firstName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
         android:ems="10"
+
         android:inputType="textPersonName"
         android:hint="First Name"
         android:autofillHints="name"
-
+        android:layout_marginHorizontal="150dp"
+        android:textAlignment="center"
+        android:layout_marginBottom="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+
+        />
 
     <EditText
         android:id="@+id/input_lastName"
@@ -27,20 +45,13 @@
         android:inputType="textPersonName"
         android:hint="Last Name"
         android:autofillHints="name"
-
+        android:layout_marginHorizontal="150dp"
+        android:textAlignment="center"
+        android:layout_marginBottom="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/input_firstName" />
 
-    <Spinner
-        android:id="@+id/input_accountTypeDropdown"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:entries="@array/account_types"
-        android:spinnerMode="dropdown"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/input_lastName" />
 
     <EditText
         android:id="@+id/input_email"
@@ -50,6 +61,9 @@
         android:inputType="textEmailAddress"
         android:hint="Email"
         android:autofillHints="emailAddress"
+        android:layout_marginHorizontal="150dp"
+        android:textAlignment="center"
+        android:layout_marginBottom="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/input_accountTypeDropdown" />
@@ -62,7 +76,9 @@
         android:inputType="textPassword"
         android:hint="Password"
         android:autofillHints="password"
-
+        android:layout_marginHorizontal="150dp"
+        android:textAlignment="center"
+        android:layout_marginBottom="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/input_email" />
@@ -74,8 +90,9 @@
         android:ems="10"
         android:inputType="textPassword"
         android:hint="Confirm Password"
-
-
+        android:layout_marginHorizontal="120dp"
+        android:textAlignment="center"
+        android:layout_marginBottom="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/input_password" />
@@ -98,14 +115,39 @@
         app:layout_constraintTop_toBottomOf="@+id/input_confirmPassword"
         />
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Account Type"
+        android:textAlignment="center"
+        android:layout_marginBottom="20dp"
+        android:textSize="20dp"
+        android:textColor="@color/white"/>
+
+    <Spinner
+        android:id="@+id/input_accountTypeDropdown"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:entries="@array/account_types"
+        android:spinnerMode="dropdown"
+        android:layout_marginHorizontal="150dp"
+        android:textAlignment="center"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/input_lastName" />
+
+
     <!--TODO: Replace with an arrow button that shows the next page-->
     <Button
         android:id="@+id/nextPageButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Button"
+        android:text="Next"
+        android:layout_marginHorizontal="160dp"
+        android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/register_error_message" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

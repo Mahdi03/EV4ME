@@ -51,7 +51,7 @@ class Registration_sellerPart1Fragment : Fragment() {
         inputState = binding.inputState
         inputCountry = binding.inputCountry
         inputZipCode = binding.inputZipCode
-        numChargersInput = binding.inputNumChargers
+        //numChargersInput = binding.inputNumChargers
 
 
 

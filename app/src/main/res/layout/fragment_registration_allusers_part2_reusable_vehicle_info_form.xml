@@ -1,28 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--We use a Card View here because we want to repeat this-->
+
+
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/bckg_1"
+
     app:cardUseCompatPadding="true">
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_marginTop="65dp"
+        >
 
         <TextView
             android:id="@+id/titleText"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Vehicle #:"/>
+            android:textAlignment="center"
+            android:text="Vehicle"
+            android:textSize="30sp"
+
+            />
 
         <EditText
             android:id="@+id/input_carMake"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Car Make:" />
+            android:text=""
+            android:hint="Car Make:"
+            />
 
         <EditText
             android:id="@+id/input_carModel"
@@ -38,11 +50,12 @@
 
         <EditText
             android:id="@+id/input_licensePlateNumber"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="textCapCharacters"
-            android:hint="License Plate #" />
+            android:hint="License Plate #"
+            android:textAlignment="center"/>
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 </androidx.cardview.widget.CardView>
